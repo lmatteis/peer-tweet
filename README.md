@@ -7,7 +7,9 @@
 
 BitTorrent's DHT is probably one of the most resilient and censorship-resistant networks on the internet. PeerTweet uses this network to allow users to broadcast *tweets* to anyone who is listening. When you start PeerTweet, it generates a hash `@6749b98157c5dd22f6178c38072fe87c08515537` for you which is similar to your Twitter username (ex. `@lmatteis`). The difference is that you have entire control over what can be posted because only you own the private key. Furthermore, thanks to the DHT, what you post cannot be stopped by any government or institution.
 
-Once you find other PeerTweet's accounts you trust (and are not spam), you can follow them. This configures your client to store this user's tweets and broadcasts them to the DHT every once in a while to keep their feed alive. This cooperation of following accounts allows for feeds to stay alive in the DHT network.
+Once you find other PeerTweet's accounts you trust (and are not spam), you can follow them. This configures your client to store this user's tweets and broadcasts them to the DHT every once in a while to keep their feed alive. This cooperation of following accounts allows for feeds to stay alive in the DHT network. The PeerTweet protocol also publishes to your feed actions such as `@234a.. just followed @919c..` or `@91b3.. just liked @9139..`. Also retweets are publicly inserted in your feed. This allows the possibility for new users to find other addresses they can trust; if I trust `@6749..` and they're following `@9801..`, then perhaps I can mark `@9801..` as not spam. This idea of publicly tweeting about your actions also allows for powerful future crawling analysis of the network.
+
+
 
 # Screenshot
 
