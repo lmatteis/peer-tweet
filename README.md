@@ -1,18 +1,19 @@
-# electron-react-boilerplate
+# PeerTweet
 
-[![NPM version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Dependency Status][david_img]][david_site]
+> Decentralized feeds using BitTorrent's DHT. Idea from Arvid and The_8472 "DHT RSS feeds" http://libtorrent.org/dht_rss.html
 
-![](./erb-logo.png)
 
-> Live editing development on desktop app
+## Abstract
 
-[Electron](http://electron.atom.io/) application boilerplate based on [React](https://facebook.github.io/react/), [Redux](https://github.com/rackt/redux), [React Router](https://github.com/rackt/react-router), [Webpack](http://webpack.github.io/docs/), [React Transform HMR](https://github.com/gaearon/react-transform-hmr) for rapid application development
+BitTorrent's DHT is probably one of the most resilient and censorship-resistant networks on the internet. PeerTweet uses this network to allow users to broadcast *tweets* to anyone who is listening. When you start PeerTweet, it generates a hash `@6749b98157c5dd22f6178c38072fe87c08515537` for you which is similar to your Twitter username (ex. `@lmatteis`). The difference is that you have entire control over what can be posted because only you own the private key. Furthermore, thanks to the DHT, what you post cannot be stopped by any government or institution.
 
-## Screenshot
+Once you find other PeerTweet's accounts you trust (and are not spam), you can follow them. This configures your client to store this user's tweets and broadcasts them to the DHT every once in a while to keep their feed alive. This cooperation of following accounts allows for feeds to stay alive in the DHT network.
 
-![](https://cloud.githubusercontent.com/assets/3382565/10557547/b1f07a4e-74e3-11e5-8d27-79ab6947d429.gif)
+# Screenshot
+
+![PeerTweet](http://i.imgur.com/ndCBA8V.png)
+
+
 
 ## Install
 
@@ -20,6 +21,22 @@ Install dependencies.
 
 ```bash
 $ npm install
+```
+
+## Installing native modules
+
+The app comes with some native bindings. I used this code to make it run on my computer:
+
+Source: https://github.com/atom/electron/blob/master/docs/tutorial/using-native-node-modules.md
+
+```bash
+npm install --save-dev electron-rebuild
+
+# Every time you run "npm install", run this
+./node_modules/.bin/electron-rebuild
+
+# On Windows if you have trouble, try:
+.\node_modules\.bin\electron-rebuild.cmd
 ```
 
 
@@ -112,15 +129,10 @@ If you want to have native-like User Interface (OS X El Capitan and Windows 10),
 
 ## Maintainers
 
+This is a fork of the https://github.com/chentsulin/electron-react-boilerplate project.
+
 - [C. T. Lin](https://github.com/chentsulin)
 - [Jhen-Jie Hong](https://github.com/jhen0409)
 
 ## License
-MIT © [C. T. Lin](https://github.com/chentsulin)
-
-[npm-image]: https://img.shields.io/npm/v/electron-react-boilerplate.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/electron-react-boilerplate
-[travis-image]: https://travis-ci.org/chentsulin/electron-react-boilerplate.svg?branch=master
-[travis-url]: https://travis-ci.org/chentsulin/electron-react-boilerplate
-[david_img]: https://img.shields.io/david/chentsulin/electron-react-boilerplate.svg
-[david_site]: https://david-dm.org/chentsulin/electron-react-boilerplate
+MIT

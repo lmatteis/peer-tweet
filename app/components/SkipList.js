@@ -15,11 +15,12 @@ export default class Main extends Component {
 
   getTweet(hash) {
     dht.get(hash, (err, res) => {
-      console.log('got tweet', hash)
+      console.log('got tweet', res)
       // add tweet to state
-      this.setState((state) => { tweets: state.tweets.push(res.v) })
+      if (res)
+        this.setState((state) => { tweets: state.tweets.push(res.v.t.toString('utf-8')) })
 
-      if (res.v.next)
+      if (res && res.v.next)
         this.getTweet(res.v.next)
 
     })
@@ -29,9 +30,12 @@ export default class Main extends Component {
     this.setState({ tweets: [] })
     // start from getting head
     dht.get(DhtStore.myHash(), (err, res) => {
-      console.log('got head')
+      console.log('got head', res)
+
+      if (res)
+        this.setState((state) => { tweets: state.tweets.push(res.v.n.toString('utf-8')) })
       // now we get the next hash!
-      if (res) {
+      if (res && res.v.next) {
         this.getTweet(res.v.next)
       }
 
@@ -44,7 +48,7 @@ export default class Main extends Component {
         <button onClick={::this.reiterate}>reiterate</button>
         <div>
           {this.state.tweets.map(function(tweet) {
-            return <div>{tweet.t.toString('utf-8')}</div>
+            return <div key={tweet}>{tweet}</div>
           })}
         </div>
       </div>
