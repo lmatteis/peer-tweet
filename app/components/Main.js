@@ -4,6 +4,7 @@ var JSONB = require('json-buffer')
 import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
+import DhtPublish from './DhtPublish'
 
 export default class Main extends Component {
   constructor(props) {
@@ -105,6 +106,10 @@ export default class Main extends Component {
         <hr />
 
         <SkipList />
+        <hr />
+
+        // this publishes to the DHT, starting from my hash in localStorage
+        <DhtPublish />
       </div>
     );
   }
