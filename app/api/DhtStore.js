@@ -26,6 +26,10 @@ export var opts = {
   }
 }
 
+export function sha1 (buf) {
+  return crypto.createHash('sha1').update(buf).digest()
+}
+
 export var DhtStore = {
   myHash: function() {
     var k = Buffer(localStorage.publicKey, 'hex')
