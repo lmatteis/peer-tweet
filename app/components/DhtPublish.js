@@ -26,14 +26,15 @@ export default class Main extends Component {
     })
   }
   publishRecursion(curr) {
-    if (!curr || !curr.v.next) {
-      console.log('publishing finished')
-      return;
-    }
 
     dht.put(curr, (err, res) => {
       if (err) return console.error(err);
-      console.log('published head', res)
+      console.log('published', res)
+
+      if (!curr || !curr.v.next) {
+        console.log('publishing finished')
+        return;
+      }
 
       var next = curr.v.next.slice(0, 20)
       curr = JSONB.parse(localStorage[next.toString('hex')])
