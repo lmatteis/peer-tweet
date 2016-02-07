@@ -29,17 +29,35 @@ export default class Main extends Component {
   reiterate(e) {
     this.setState({ tweets: [] })
     // start from getting head
+    var myHash = DhtStore.myHash()
+    var myFeed = localStorage[myHash]
+
+    if (!myFeed) return;
+
+    var head = JSONB.parse(myFeed)
+
+    var arr = []
+    var curr = head
+    while (curr.v.next && arr.length < 10) { // only first 10
+      // curr.next is a buffer of many bytes, only get the first 20
+      var next = curr.v.next.slice(0, 20)
+      curr = JSONB.parse(localStorage[next.toString('hex')])
+      arr.push(curr.v.t.toString('utf-8'))
+    }
+    this.setState({ tweets : arr })
+
+    /*
     dht.get(DhtStore.myHash(), (err, res) => {
       console.log('got head', res)
 
       if (res)
-        this.setState((state) => { tweets: state.tweets.push(res.v.n.toString('utf-8')) })
       // now we get the next hash!
       if (res && res.v.next) {
         this.getTweet(res.v.next)
       }
 
     })
+    */
   }
 
   render() {

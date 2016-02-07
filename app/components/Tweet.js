@@ -22,15 +22,15 @@ export default class Tweet extends Component {
     this.setState({ tweet: e.target.value })
   }
 
-  findNext(feed, head) {
+  findNext(head) {
     // it has to be 1 hop, 2 hops, 4 hops and 8 hops away
     var arr = []
     var curr = head
-    while (curr.v.next && arr.length <= 8) { 
+    while (curr.v.next && arr.length <= 8) {
       // curr.next is a buffer of many bytes, only get the first 20
       var next = curr.v.next.slice(0, 20)
       arr.push(next)
-      curr = feed[next.toString('hex')]
+      curr = JSONB.parse(localStorage[next.toString('hex')])
     }
     // return max 4 items arrays
     var retArr = []
@@ -44,8 +44,9 @@ export default class Tweet extends Component {
       retArr.push(arr[7]) // 7 hops
 
     var tot = 0
-    for (var i=0; i<retArr.length; i++)
+    for (var i=0; i<retArr.length; i++) {
       tot += retArr[i].length
+    }
 
     console.log(retArr, tot)
 
@@ -64,30 +65,26 @@ export default class Tweet extends Component {
     // figure out what `next` is and our `seq`
     if (!myFeed) { // we have nothing locally
       opts.seq = 0 // it's the first tweet
-      var o = {}
     } else {
-      var o = JSONB.parse(myFeed)
-      var head = o[myHash]
+      var head = JSONB.parse(myFeed)
 
       opts.seq = head.seq + 1
       // it has to be 1 hop, 2 hops, 4 hops and 8 hops away
-      iopts.v.next = this.findNext(o, head)
+      iopts.v.next = this.findNext(head)
     }
 
     // create immutable tweet
     // and have head point to it
     var bHash = sha1(bencode.encode(iopts.v))
     var hash = bHash.toString('hex')
-    o[hash] = iopts
+    localStorage[hash] = JSONB.stringify(iopts)
 
     // now change my head
     opts.v = {
       n: '@lmatteis',
       next: bHash
     }
-    o[myHash] = opts;
-
-    localStorage[myHash] = JSONB.stringify(o)
+    localStorage[myHash] = JSONB.stringify(opts);
   }
 
   tweetDHT() {
