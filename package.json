@@ -132,10 +132,12 @@
     "webpack-target-electron-renderer": "^0.3.0"
   },
   "dependencies": {
+    "bittorrent-dht": "^6.4.0",
     "ed25519-supercop": "^1.0.2",
     "electron-debug": "^0.5.1",
     "font-awesome": "^4.4.0",
     "history": "^1.17.0",
+    "json-buffer": "^2.0.11",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-redux": "^4.0.5",
