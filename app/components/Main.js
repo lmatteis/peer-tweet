@@ -5,7 +5,7 @@ import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
 import DhtPublish from './DhtPublish'
-import Follow from './Follow'
+import DhtDownload from './DhtDownload'
 
 const remote = require('electron').remote;
 
@@ -112,12 +112,11 @@ export default class Main extends Component {
         <SkipList />
         <hr />
 
-        // this publishes to the DHT, starting from my hash in localStorage
         <DhtPublish />
-
         <hr />
 
-        <Follow />
+        <DhtDownload />
+
       </div>
     );
   }

@@ -42,7 +42,10 @@ export default class Main extends Component {
       // curr.next is a buffer of many bytes, only get the first 20
       var next = curr.v.next.slice(0, 20)
       curr = JSONB.parse(localStorage[next.toString('hex')])
-      arr.push(curr.v.t.toString('utf-8'))
+      if (curr.v.t)
+        arr.push(curr.v.t.toString('utf-8'))
+      else if (curr.v.f) // follow
+        arr.push('following ' + curr.v.f.toString('hex'))
     }
     this.setState({ tweets : arr })
 

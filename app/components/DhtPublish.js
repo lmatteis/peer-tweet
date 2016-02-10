@@ -5,7 +5,7 @@ import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
 
-export default class Main extends Component {
+export default class DhtPublish extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -69,6 +69,8 @@ export default class Main extends Component {
   render() {
     return (
       <div>
+        // this publishes to the DHT, starting from my hash in localStorage
+        <br />
         <button onClick={::this.publish}>publish</button>
         <div>
         </div>

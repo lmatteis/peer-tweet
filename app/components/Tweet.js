@@ -53,13 +53,20 @@ export default class Tweet extends Component {
     return Buffer.concat(retArr, tot)
   }
 
-  tweet() {
+  tweet(type) {
     var myHash = DhtStore.myHash()
     var myFeed = localStorage[myHash]
 
     var iopts = {}
-    iopts.v = {
-      t: new Buffer(this.state.tweet)
+    if (type == 'tweet') {
+      iopts.v = {
+        t: new Buffer(this.state.tweet)
+      }
+    } else if (type == 'follow') {
+      iopts.v = {
+        // f is a hash
+        f: new Buffer(this.state.tweet, 'hex')
+      }
     }
 
     // figure out what `next` is and our `seq`
@@ -145,7 +152,8 @@ export default class Tweet extends Component {
     return (
       <div>
         <input type="text" onChange={::this.onTweetChange} />
-        <button onClick={::this.tweet}>Tweet</button>
+        <button onClick={this.tweet.bind(this, 'tweet')}>Tweet</button>
+        <button onClick={this.tweet.bind(this, 'follow')}>Follow</button>
       </div>
     );
   }
