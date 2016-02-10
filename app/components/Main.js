@@ -5,6 +5,9 @@ import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
 import DhtPublish from './DhtPublish'
+import Follow from './Follow'
+
+const remote = require('electron').remote;
 
 export default class Main extends Component {
   constructor(props) {
@@ -21,8 +24,9 @@ export default class Main extends Component {
 
   }
   componentDidMount() {
-    this.dht.listen(3000, function () {
-      console.log('now listening on 3000 with default bootstrap nodes')
+    var port = remote.process.env.PORT || 3000
+    this.dht.listen(port, function () {
+      console.log('now listening on '+port+' with default bootstrap nodes')
     })
     this.dht.on('ready', function () {
       console.log('WE ARE READY!')
@@ -44,7 +48,7 @@ export default class Main extends Component {
         console.log(res)
         console.log(JSONB.stringify(res))
         console.log(JSONB.parse(JSONB.stringify(res)))
-        that.setState({ getResponse : JSON.stringify(res.v) })
+        that.setState({ getResponse : JSONB.stringify(res) })
       } else {
         console.log(res)
       }
@@ -110,6 +114,10 @@ export default class Main extends Component {
 
         // this publishes to the DHT, starting from my hash in localStorage
         <DhtPublish />
+
+        <hr />
+
+        <Follow />
       </div>
     );
   }

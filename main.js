@@ -24,6 +24,9 @@ app.on('window-all-closed', () => {
 });
 
 
+if (process.argv.length >= 3)
+  app.setPath('userData', process.argv[2])
+
 app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1024, height: 728 });
 

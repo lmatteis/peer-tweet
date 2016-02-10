@@ -59,7 +59,7 @@ export default class Tweet extends Component {
 
     var iopts = {}
     iopts.v = {
-      t: this.state.tweet
+      t: new Buffer(this.state.tweet)
     }
 
     // figure out what `next` is and our `seq`
