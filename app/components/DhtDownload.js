@@ -12,21 +12,21 @@ export default class DhtDownload extends Component {
     }
   }
 
-  downloadRecursion(hash) {
+  downloadRecursion(hash, isMyFeed, isHead) {
     var curr = localStorage[hash]
-    if (curr) { // we already have it, go to next
+    if (curr && !isHead) { // we already have it, go to next
       curr = JSONB.parse(curr)
       console.log('already have', hash, 'in localstorage')
-      if (curr.v.f) { // we have a follow hash! branch out!
+      if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
         console.log('have a follower. branching out')
-        this.downloadRecursion(curr.v.f.toString('hex'))
+        this.downloadRecursion(curr.v.f.toString('hex'), false, true)
       }
       if (!curr.v.next) {
         console.log('download finished')
         return;
       }
       var next = curr.v.next.slice(0, 20) // only first 20 bytes
-      return this.downloadRecursion(next.toString('hex'))
+      return this.downloadRecursion(next.toString('hex'), isMyFeed)
     }
 
     console.log('dht.get()ing', hash)
@@ -36,7 +36,7 @@ export default class DhtDownload extends Component {
       localStorage[hash] = JSONB.stringify(res)
       if (res.v.next) {
         var next = res.v.next.slice(0, 20) // only first 20 bytes
-        this.downloadRecursion(next.toString('hex'))
+        this.downloadRecursion(next.toString('hex'), isMyFeed)
       }
 
     })
@@ -66,7 +66,7 @@ export default class DhtDownload extends Component {
 
     // i guess we can start publishing head
     console.log('starting to download head')
-    this.downloadRecursion(myHash)
+    this.downloadRecursion(myHash, true, false)
 
   }
 

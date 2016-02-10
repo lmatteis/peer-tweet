@@ -38,14 +38,25 @@ export default class Main extends Component {
 
     var arr = []
     var curr = head
-    while (curr.v.next && arr.length < 10) { // only first 10
+    while (curr.v.next/* && arr.length < 10*/) { // only first 10
       // curr.next is a buffer of many bytes, only get the first 20
       var next = curr.v.next.slice(0, 20)
       curr = JSONB.parse(localStorage[next.toString('hex')])
       if (curr.v.t)
         arr.push(curr.v.t.toString('utf-8'))
-      else if (curr.v.f) // follow
+      else if (curr.v.f) { // follow
+        var followerFeed = localStorage[curr.v.f.toString('hex')]
+        if (followerFeed) {
+          var followerCurr = JSONB.parse(followerFeed) // follower head
+          while (followerCurr.v.next) {
+            var n = followerCurr.v.next.slice(0, 20)
+            followerCurr = JSONB.parse(localStorage[n.toString('hex')])
+            if (followerCurr.v.t)
+              arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
+          }
+        }
         arr.push('following ' + curr.v.f.toString('hex'))
+      }
     }
     this.setState({ tweets : arr })
 
