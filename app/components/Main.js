@@ -6,6 +6,7 @@ import Tweet from './Tweet'
 import SkipList from './SkipList'
 import DhtPublish from './DhtPublish'
 import DhtDownload from './DhtDownload'
+import DhtSkipList from './DhtSkipList'
 
 const remote = require('electron').remote;
 
@@ -116,6 +117,10 @@ export default class Main extends Component {
         <hr />
 
         <DhtDownload />
+
+        <hr />
+
+        <DhtSkipList />
 
       </div>
     );
