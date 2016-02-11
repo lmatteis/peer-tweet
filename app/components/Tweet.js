@@ -41,16 +41,37 @@ export default class Tweet extends Component {
     if (arr[3])
       retArr.push(arr[3]) // 4 hops
     if (arr[7])
-      retArr.push(arr[7]) // 7 hops
+      retArr.push(arr[7]) // 8 hops
 
     var tot = 0
     for (var i=0; i<retArr.length; i++) {
       tot += retArr[i].length
     }
 
-    console.log(retArr, tot)
+    //console.log(retArr, tot)
 
     return Buffer.concat(retArr, tot)
+  }
+
+  findNextHead(bHash) {
+    // it has to be the first 4 items
+    var arr = []
+    var curr = JSONB.parse(localStorage[bHash.toString('hex')])
+    arr.push(bHash) // first hash
+    while (curr.v.next && arr.length <= 3) {
+      // curr.next is a buffer of many bytes, only get the first 20
+      var next = curr.v.next.slice(0, 20)
+      arr.push(next)
+      curr = JSONB.parse(localStorage[next.toString('hex')])
+    }
+
+    var tot = 0
+    for (var i=0; i<arr.length; i++) {
+      tot += arr[i].length
+    }
+    console.log(arr, tot)
+
+    return Buffer.concat(arr, tot)
   }
 
   tweet(type) {
@@ -89,7 +110,7 @@ export default class Tweet extends Component {
     // now change my head
     opts.v = {
       n: '@lmatteis',
-      next: bHash
+      next: this.findNextHead(bHash) // this should be at least the first 4 hashes (80 bytes)
     }
     localStorage[myHash] = JSONB.stringify(opts);
   }

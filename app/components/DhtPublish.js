@@ -25,7 +25,7 @@ export default class DhtPublish extends Component {
 
     })
   }
-  publishRecursion(curr) {
+  publishRecursion(curr, isMyFeed) {
 
     dht.put(curr, (err, res) => {
       if (err) return console.error(err);
@@ -38,8 +38,16 @@ export default class DhtPublish extends Component {
 
       var next = curr.v.next.slice(0, 20)
       curr = JSONB.parse(localStorage[next.toString('hex')])
-      console.log('now publishing', curr)
-      this.publishRecursion(curr)
+
+      if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
+        var followerCurr = JSONB.parse(localStorage[curr.v.f.toString('hex')])
+        console.log('have a follower. branching out publishing', followerCurr.toString('hex'))
+        this.publishRecursion(followerCurr, false)
+        //this.downloadRecursion(curr.v.f.toString('hex'), false, true)
+      }
+
+      console.log('now publishing', next.toString('hex'))
+      this.publishRecursion(curr, isMyFeed)
 
     })
   }
@@ -62,7 +70,7 @@ export default class DhtPublish extends Component {
     // i guess we can start publishing head
     console.log('starting to publish head')
     var curr = head
-    this.publishRecursion(curr)
+    this.publishRecursion(curr, true)
 
   }
 
