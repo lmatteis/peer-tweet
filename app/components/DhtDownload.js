@@ -9,6 +9,7 @@ export default class DhtDownload extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      stack: 0
     }
   }
 
@@ -19,10 +20,14 @@ export default class DhtDownload extends Component {
       console.log('already have', hash, 'in localstorage')
       if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
         console.log('have a follower. branching out')
+        this.setState((state) => ({ stack: state.stack + 1 }))
         this.downloadRecursion(curr.v.f.toString('hex'), false, true)
       }
       if (!curr.v.next) {
-        console.log('download finished')
+        this.setState((state) => ({ stack: state.stack - 1 }))
+        if (this.state.stack == 0) {
+          console.log('download finished')
+        }
         return;
       }
       var next = curr.v.next.slice(0, 20) // only first 20 bytes
@@ -66,6 +71,7 @@ export default class DhtDownload extends Component {
 
     // i guess we can start publishing head
     console.log('starting to download head')
+    this.setState((state) => ({ stack: state.stack + 1 }))
     this.downloadRecursion(myHash, true, false)
 
   }
@@ -75,6 +81,8 @@ export default class DhtDownload extends Component {
       <div>
         // downloads all the feeds i'm following
         // including my own feed - it doesn't dht.get() them if already in localStorage
+        <br/>
+        stack: {this.state.stack}
         <br />
         <button onClick={::this.download}>download</button>
       </div>

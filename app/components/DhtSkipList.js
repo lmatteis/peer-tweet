@@ -61,8 +61,6 @@ export default class DhtSkipList extends Component {
   render() {
     return (
       <div>
-        // downloads all the feeds i'm following
-        // including my own feed - it doesn't dht.get() them if already in localStorage
         <br />
         <input type="text" onChange={::this.onHashChange} />
         <button onClick={::this.skip}>dht skiplist iterate</button>

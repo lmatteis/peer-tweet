@@ -25,7 +25,7 @@ export default class Main extends Component {
 
   }
   componentDidMount() {
-    
+
   }
 
   updateDhtArray(e) {
@@ -106,7 +106,7 @@ export default class Main extends Component {
         <SkipList />
         <hr />
 
-        <DhtPublish />
+        <DhtPublish every="1800000"/>
         <hr />
 
         <DhtDownload />

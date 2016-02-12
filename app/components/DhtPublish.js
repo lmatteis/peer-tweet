@@ -8,9 +8,29 @@ import SkipList from './SkipList'
 export default class DhtPublish extends Component {
   constructor(props) {
     super(props)
+    this.props = props
     this.state = {
+      stack: 0,
       tweets: []
     }
+
+  }
+
+  componentDidMount() {
+    var run = () => {
+      if (this.state.stack > 0) {
+        console.log('still publishing')
+        return;
+      }
+      this.publish()
+    }
+
+    setInterval(run, this.props.every || 1800000) // 30 minutes = 1800000 ms
+
+    dht.on('ready', () => {
+      run()
+    })
+
   }
 
   getTweet(hash) {
@@ -32,7 +52,10 @@ export default class DhtPublish extends Component {
       console.log('published', res)
 
       if (!curr || !curr.v.next) {
-        console.log('publishing finished')
+        this.setState((state) => ({ stack: state.stack - 1 }))
+        if (this.state.stack == 0) {
+          console.log('publishing finished')
+        }
         return;
       }
 
@@ -42,6 +65,7 @@ export default class DhtPublish extends Component {
       if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
         var followerCurr = JSONB.parse(localStorage[curr.v.f.toString('hex')])
         console.log('have a follower. branching out publishing', curr.v.f.toString('hex'))
+        this.setState((state) => ({ stack: state.stack + 1 }))
         this.publishRecursion(followerCurr, false)
         //this.downloadRecursion(curr.v.f.toString('hex'), false, true)
       }
@@ -70,6 +94,7 @@ export default class DhtPublish extends Component {
     // i guess we can start publishing head
     console.log('starting to publish head')
     var curr = head
+    this.setState((state) => ({ stack: state.stack + 1 }))
     this.publishRecursion(curr, true)
 
   }
@@ -79,7 +104,8 @@ export default class DhtPublish extends Component {
       <div>
         // this publishes to the DHT, starting from my hash in localStorage
         <br />
-        <button onClick={::this.publish}>publish</button>
+        stack: {this.state.stack}
+        <button onClick={::this.publish} disabled={this.state.stack > 0}>{this.state.stack == 0 ? 'publish' : 'publishing...'}</button>
         <div>
         </div>
       </div>
