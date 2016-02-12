@@ -24,7 +24,7 @@ app.on('window-all-closed', () => {
 });
 
 
-if (process.argv.length >= 3)
+if (process.argv.length >= 3 && process.env.NODE_ENV === 'development')
   app.setPath('userData', process.argv[2])
 
 app.on('ready', () => {

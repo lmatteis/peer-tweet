@@ -20,7 +20,7 @@ export default class DhtSkipList extends Component {
 
   start(hash) {
     if (this.gotHashes[hash]) return console.log('we already got this hash', hash)
-    console.log('getting', hash)
+    console.log('getting', hash.toString('hex'))
     dht.get(hash, (err, res) => {
       // concurrently get all hashes in all .next fields :) and cache the hash in this.state
       // hashes are in 20 bytes chunks in .next
@@ -28,8 +28,10 @@ export default class DhtSkipList extends Component {
         this.gotHashes[hash] = true
         if (res.v.t)
           this.setState((state) => { tweets: state.tweets.push(res.v.t.toString('utf-8')) })
+        else if (res.v.n) // feed name
+          this.setState((state) => { tweets: state.tweets.push(res.v.n.toString('utf-8')) })
         else if (res.v.f)
-          this.setState((state) => { tweets: state.tweets.push(res.v.f.toString('utf-8')) })
+          this.setState((state) => { tweets: state.tweets.push(res.v.f.toString('hex')) })
 
         var buff = res.v.next
         if (!buff) return console.error('hash doesnt have a next field', hash);

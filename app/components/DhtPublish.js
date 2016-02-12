@@ -41,7 +41,7 @@ export default class DhtPublish extends Component {
 
       if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
         var followerCurr = JSONB.parse(localStorage[curr.v.f.toString('hex')])
-        console.log('have a follower. branching out publishing', followerCurr.toString('hex'))
+        console.log('have a follower. branching out publishing', curr.v.f.toString('hex'))
         this.publishRecursion(followerCurr, false)
         //this.downloadRecursion(curr.v.f.toString('hex'), false, true)
       }

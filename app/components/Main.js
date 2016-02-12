@@ -25,14 +25,7 @@ export default class Main extends Component {
 
   }
   componentDidMount() {
-    var port = remote.process.env.PORT || 3000
-    this.dht.listen(port, function () {
-      console.log('now listening on '+port+' with default bootstrap nodes')
-    })
-    this.dht.on('ready', function () {
-      console.log('WE ARE READY!')
-    })
-
+    
   }
 
   updateDhtArray(e) {
