@@ -12,6 +12,9 @@ export default class Main extends Component {
       tweets: []
     }
   }
+  componentDidMount() {
+    this.reiterate()
+  }
 
   getTweet(hash) {
     dht.get(hash, (err, res) => {
@@ -79,12 +82,9 @@ export default class Main extends Component {
   render() {
     return (
       <div>
-        <button onClick={::this.reiterate}>reiterate</button>
-        <div>
-          {this.state.tweets.map(function(tweet) {
-            return <div key={tweet}>{tweet}</div>
-          })}
-        </div>
+        {this.state.tweets.map(function(tweet) {
+          return <div key={tweet}>{tweet}</div>
+        })}
       </div>
     );
   }

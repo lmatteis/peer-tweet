@@ -9,7 +9,12 @@ module.exports = {
       test: /\.jsx?$/,
       loaders: ['babel-loader'],
       exclude: /node_modules/
-    }]
+    },
+    {
+       test   : /\.woff|\.woff2|\.svg|.eot|\.ttf/,
+       loader : 'url?prefix=font/&limit=10000'
+    }
+    ]
   },
   output: {
     path: path.join(__dirname, 'dist'),

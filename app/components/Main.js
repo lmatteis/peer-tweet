@@ -82,42 +82,62 @@ export default class Main extends Component {
 
   render() {
     return (
-      <div>
-        My hash: {DhtStore.myHash()}
-        <br/>
-        My hash base58 converted: {DhtStore.hashToBase58(DhtStore.myHash())}
-        <br/>
-        My hash decoded from base58: {DhtStore.base58toHash(DhtStore.hashToBase58(DhtStore.myHash()))}
-        <br/>
-        <textarea value={this.state.getResponse}></textarea>
-        <input type="text" onChange={::this.onGetChange} />
-        <button onClick={::this.get}>GET</button>
+      <div className="flexbox-container">
+        <div className="flexbox-sidebar">
+          <div className="sidebar-item ion-person top"></div>
+          <div className="sidebar-item ion-home"></div>
+          <div className="sidebar-item ion-home"></div>
+          <div className="sidebar-item ion-home"></div>
+          <div className="sidebar-item ion-home"></div>
+        </div>
+        <div className="flexbox-content">
+          <div className="top-bar">
+            @{DhtStore.hashToBase58(DhtStore.myHash())}
+          </div>
+          <div className="tweets">
+            <SkipList />
+          </div>
 
-        <br/>
-        <textarea value={this.state.putResponse}></textarea>
-        <input type="text" onChange={::this.onPutChange} />
-        <button onClick={::this.put}>PUT</button>
+          { false &&
+            <div>
+              My hash: {DhtStore.myHash()}
+              <br/>
+              My hash base58 converted: {DhtStore.hashToBase58(DhtStore.myHash())}
+              <br/>
+              My hash decoded from base58: {DhtStore.base58toHash(DhtStore.hashToBase58(DhtStore.myHash()))}
+              <br/>
+              <textarea value={this.state.getResponse}></textarea>
+              <input type="text" onChange={::this.onGetChange} />
+              <button onClick={::this.get}>GET</button>
 
-        <br/>
-        <textarea value={this.state.dhtArray}></textarea>
-        <button onClick={::this.updateDhtArray}>Update DHT array</button>
-        <br />
-        <hr />
+              <br/>
+              <textarea value={this.state.putResponse}></textarea>
+              <input type="text" onChange={::this.onPutChange} />
+              <button onClick={::this.put}>PUT</button>
 
-        <Tweet />
-        <hr />
+              <br/>
+              <textarea value={this.state.dhtArray}></textarea>
+              <button onClick={::this.updateDhtArray}>Update DHT array</button>
+              <br />
+              <hr />
 
-        <SkipList />
-        <hr />
+              <Tweet />
+              <hr />
 
-        <DhtPublish every="1800000"/>
-        <hr />
+              <hr />
 
-        <DhtDownload />
+              <DhtPublish every="1800000"/>
+              <hr />
 
-        <hr />
+              <DhtDownload />
 
-        <DhtSkipList />
+              <hr />
+
+              <DhtSkipList />
+            </div>
+          }
+
+        </div>
 
       </div>
     );
