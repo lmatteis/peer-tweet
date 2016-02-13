@@ -28,7 +28,7 @@ export default class DhtPublish extends Component {
     setInterval(run, this.props.every || 1800000) // 30 minutes = 1800000 ms
 
     dht.on('ready', () => {
-      run()
+      //run()
     })
 
   }

@@ -74,9 +74,21 @@ export default class Tweet extends Component {
     return Buffer.concat(arr, tot)
   }
 
+  getCurrentTimestamp() {
+    // get millis in UTC
+    var now = new Date()
+    var millis = now.getTime() + (now.getTimezoneOffset() * 60000)
+    var dateInMinutes = Math.floor(Math.floor(Date.now() / 1000) / 60)
+    var length = Math.ceil((Math.log(dateInMinutes)/Math.log(2))/8);
+    var buff = new Buffer(length)
+    buff.writeUIntBE(dateInMinutes, 0, length);
+    return buff;
+  }
+
   tweet(type) {
     var myHash = DhtStore.myHash()
     var myFeed = localStorage[myHash]
+    var timestamp = this.getCurrentTimestamp()
 
     var iopts = {}
     if (type == 'tweet') {
@@ -89,6 +101,8 @@ export default class Tweet extends Component {
         f: new Buffer(this.state.tweet, 'hex')
       }
     }
+
+    iopts.v.d = timestamp
 
     // figure out what `next` is and our `seq`
     if (!myFeed) { // we have nothing locally
@@ -110,6 +124,7 @@ export default class Tweet extends Component {
     // now change my head
     opts.v = {
       n: '@lmatteis',
+      d: timestamp,
       next: this.findNextHead(bHash) // this should be at least the first 4 hashes (80 bytes)
     }
     localStorage[myHash] = JSONB.stringify(opts);

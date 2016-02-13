@@ -43,7 +43,10 @@ export default class Main extends Component {
       var next = curr.v.next.slice(0, 20)
       curr = JSONB.parse(localStorage[next.toString('hex')])
       if (curr.v.t)
-        arr.push(curr.v.t.toString('utf-8'))
+        arr.push(
+          curr.v.t.toString('utf-8') + ' - ' +
+          new Date(curr.v.d.readUIntBE(0, curr.v.d.length) * 60 * 1000)
+        )
       else if (curr.v.f) { // follow
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
