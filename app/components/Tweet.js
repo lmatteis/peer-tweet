@@ -76,8 +76,8 @@ export default class Tweet extends Component {
 
   getCurrentTimestamp() {
     // get millis in UTC
-    var now = new Date()
-    var millis = now.getTime() + (now.getTimezoneOffset() * 60000)
+    //var now = new Date()
+    //var millis = now.getTime() + (now.getTimezoneOffset() * 60000)
     var dateInMinutes = Math.floor(Math.floor(Date.now() / 1000) / 60)
     var length = Math.ceil((Math.log(dateInMinutes)/Math.log(2))/8);
     var buff = new Buffer(length)

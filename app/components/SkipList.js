@@ -42,12 +42,11 @@ export default class Main extends Component {
       // curr.next is a buffer of many bytes, only get the first 20
       var next = curr.v.next.slice(0, 20)
       curr = JSONB.parse(localStorage[next.toString('hex')])
-      if (curr.v.t)
-        arr.push(
-          curr.v.t.toString('utf-8') + ' - ' +
-          new Date(curr.v.d.readUIntBE(0, curr.v.d.length) * 60 * 1000)
-        )
-      else if (curr.v.f) { // follow
+      if (curr.v.t) {
+        var d = new Date(0)
+        d.setUTCMinutes(curr.v.d.readUIntBE(0, curr.v.d.length))
+        arr.push(curr.v.t.toString('utf-8') + ' - ' + d)
+      } else if (curr.v.f) { // follow
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
           var followerCurr = JSONB.parse(followerFeed) // follower head
