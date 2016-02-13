@@ -5,6 +5,9 @@ var JSONB = require('json-buffer')
 var crypto = require('crypto')
 const remote = require('electron').remote;
 
+var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+var bs58 = require('base-x')(BASE58)
+
 console.log('initting DHT')
 export var dht = new DHT({ verify: ed.verify })
 
@@ -54,6 +57,18 @@ export var DhtStore = {
   myHash: function() {
     var k = Buffer(localStorage.publicKey, 'hex')
     return crypto.createHash('sha1').update(k).digest('hex')
+  },
+  hashToBase58: function(hash) {
+    return bs58.encode(new Buffer(hash, 'hex'))
+  },
+  base58toHash: function(address) {
+    var out = bs58.decode(address)
+    //console.log(out.toString())
+    // => 0,60,23,110,101,155,234,15,41,163,233,191,120,128,193,18,177,179,27,77,200,38,38,129,135
+
+    // if using Node.js or browserify
+    return new Buffer(out).toString('hex')
+
   },
   get: function(hash, callback) {
     // check if this hash is in localStorage

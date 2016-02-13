@@ -85,6 +85,10 @@ export default class Main extends Component {
       <div>
         My hash: {DhtStore.myHash()}
         <br/>
+        My hash base58 converted: {DhtStore.hashToBase58(DhtStore.myHash())}
+        <br/>
+        My hash decoded from base58: {DhtStore.base58toHash(DhtStore.hashToBase58(DhtStore.myHash()))}
+        <br/>
         <textarea value={this.state.getResponse}></textarea>
         <input type="text" onChange={::this.onGetChange} />
         <button onClick={::this.get}>GET</button>
