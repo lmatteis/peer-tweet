@@ -15,7 +15,7 @@ Once you find other PeerTweet's accounts you trust (and are not spam), you can f
 
 # Screenshot
 
-![PeerTweet](http://i.imgur.com/ndCBA8V.png)
+![PeerTweet](http://i.imgur.com/x2FQLFA.png)
 
 
 
