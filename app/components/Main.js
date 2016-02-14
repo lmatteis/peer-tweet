@@ -99,7 +99,7 @@ export default class Main extends Component {
             <SkipList />
           </div>
 
-          { false &&
+          { true &&
             <div>
               My hash: {DhtStore.myHash()}
               <br/>
