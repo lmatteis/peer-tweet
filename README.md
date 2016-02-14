@@ -135,8 +135,5 @@ If you want to have native-like User Interface (OS X El Capitan and Windows 10),
 
 This is a fork of the https://github.com/chentsulin/electron-react-boilerplate project.
 
-- [C. T. Lin](https://github.com/chentsulin)
-- [Jhen-Jie Hong](https://github.com/jhen0409)
-
 ## License
 MIT
