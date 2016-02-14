@@ -6,6 +6,7 @@ body {
   padding:0;
   font: 200 14px "Helvetica Neue","Helvetica","Arial",sans-serif;
   height:100%;
+  -webkit-font-smoothing: antialiased;
 }
 #root {
   height: 100%;
@@ -19,7 +20,7 @@ body {
   background-color: #F3E1DB;
   width: 82px;
   border-right: 1px solid #B9ADAD;
-  background: linear-gradient(-45deg, #CBCACE, #FFEFE4);
+  background: #CBCACE;
 }
 .sidebar-item {
   position: relative;
@@ -47,6 +48,7 @@ body {
 
 .flexbox-content {
   width: 100%;
+  overflow-y:auto;
 }
 .top-bar {
   font-weight: 500;

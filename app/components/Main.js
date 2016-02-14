@@ -7,6 +7,7 @@ import SkipList from './SkipList'
 import DhtPublish from './DhtPublish'
 import DhtDownload from './DhtDownload'
 import DhtSkipList from './DhtSkipList'
+import Timeline from './Timeline'
 
 const remote = require('electron').remote;
 
@@ -18,7 +19,8 @@ export default class Main extends Component {
       getResponse: null,
       putResponse: null,
       getRequest: null,
-      putRequest: null
+      putRequest: null,
+      page: 'timeline'
     }
 
     this.dht = dht
@@ -81,25 +83,26 @@ export default class Main extends Component {
   };
 
   render() {
+    var content;
+    if (this.state.page == 'timeline')
+      content = <Timeline />
+    // else if (this.state.page == 'address') }
+    //   content = <Address address={this.state.address} />
+
     return (
       <div className="flexbox-container">
         <div className="flexbox-sidebar">
-          <div className="sidebar-item ion-person top"></div>
-          <div className="sidebar-item ion-home"></div>
+          <div className="sidebar-item ion-home top"></div>
+          <div className="sidebar-item ion-person"></div>
           <div className="sidebar-item ion-home"></div>
           <div className="sidebar-item ion-home"></div>
           <div className="sidebar-item ion-home"></div>
         </div>
         <div className="flexbox-content">
-          <div className="top-bar">
-            @{DhtStore.hashToBase58(DhtStore.myHash())}
-            <div className="compose ion-compose"></div>
-          </div>
-          <div className="tweets">
-            <SkipList />
-          </div>
+          {content}
 
-          { true &&
+
+          { false &&
             <div>
               My hash: {DhtStore.myHash()}
               <br/>
