@@ -5,7 +5,7 @@ var JSONB = require('json-buffer')
 var crypto = require('crypto')
 const remote = require('electron').remote;
 
-var BASE58 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var bs58 = require('base-x')(BASE58)
 
 console.log('initting DHT')

@@ -88,6 +88,7 @@ export default class DhtPublish extends Component {
 
     var head = JSONB.parse(myFeed)
     // need to merge this with our default key sign stuff
+    // should .get() my head to see which is the current .seq
     head.sign = opts.sign;
 
 
@@ -100,14 +101,10 @@ export default class DhtPublish extends Component {
   }
 
   render() {
+    // this publishes to the DHT, starting from my hash in localStorage
     return (
-      <div>
-        // this publishes to the DHT, starting from my hash in localStorage
-        <br />
-        stack: {this.state.stack}
-        <button onClick={::this.publish} disabled={this.state.stack > 0}>{this.state.stack == 0 ? 'publish' : 'publishing...'}</button>
-        <div>
-        </div>
+      <div className="sidebar-item ion-upload" onClick={::this.publish} disabled={this.state.stack > 0}>
+        {this.state.stack}
       </div>
     );
   }

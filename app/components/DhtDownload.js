@@ -15,7 +15,7 @@ export default class DhtDownload extends Component {
 
   downloadRecursion(hash, isMyFeed, isHead) {
     var curr = localStorage[hash]
-    if (curr && !isHead) { // we already have it, go to next
+    if (curr/* && !isHead*/) { // we already have it, go to next
       curr = JSONB.parse(curr)
       console.log('already have', hash, 'in localstorage')
       if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
@@ -77,14 +77,11 @@ export default class DhtDownload extends Component {
   }
 
   render() {
+    // downloads all the feeds i'm following
+    // including my own feed - it doesn't dht.get() them if already in localStorage
     return (
-      <div>
-        // downloads all the feeds i'm following
-        // including my own feed - it doesn't dht.get() them if already in localStorage
-        <br/>
-        stack: {this.state.stack}
-        <br />
-        <button onClick={::this.download}>download</button>
+      <div className="sidebar-item ion-ios-cloud-download" onClick={::this.download}>
+        {this.state.stack}
       </div>
     );
   }

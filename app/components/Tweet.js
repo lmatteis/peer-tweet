@@ -98,7 +98,7 @@ export default class Tweet extends Component {
     } else if (type == 'follow') {
       iopts.v = {
         // f is a hash
-        f: new Buffer(this.state.tweet, 'hex')
+        f: new Buffer(DhtStore.base58toHash(this.state.tweet), 'hex')
       }
     }
 

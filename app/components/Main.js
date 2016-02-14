@@ -8,6 +8,7 @@ import DhtPublish from './DhtPublish'
 import DhtDownload from './DhtDownload'
 import DhtSkipList from './DhtSkipList'
 import Timeline from './Timeline'
+import Address from './Address'
 
 const remote = require('electron').remote;
 
@@ -86,15 +87,26 @@ export default class Main extends Component {
     var content;
     if (this.state.page == 'timeline')
       content = <Timeline />
-    // else if (this.state.page == 'address') }
-    //   content = <Address address={this.state.address} />
+    else if (this.state.page == 'address')
+      content = <Address hashHex={this.state.hashHex} />
 
     return (
       <div className="flexbox-container">
         <div className="flexbox-sidebar">
-          <div className="sidebar-item ion-home top"></div>
-          <div className="sidebar-item ion-person"></div>
-          <div className="sidebar-item ion-home"></div>
+          <div className="sidebar-item ion-home top"
+               onClick={
+              () => this.setState({
+                page: 'timeline',
+              })}></div>
+          <div className="sidebar-item ion-person"
+               onClick={
+              () => this.setState({
+                page: 'address',
+                hashHex: DhtStore.myHash()
+              })}></div>
+          <DhtPublish every="1800000"/>
+          <DhtDownload />
+
           <div className="sidebar-item ion-home"></div>
           <div className="sidebar-item ion-home"></div>
         </div>

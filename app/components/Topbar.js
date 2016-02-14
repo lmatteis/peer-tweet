@@ -3,20 +3,19 @@ var bencode = require('bencode')
 var JSONB = require('json-buffer')
 import { DhtStore, dht, opts} from '../api/DhtStore'
 import SkipList from './SkipList'
-import Topbar from './Topbar'
+import Tweet from './Tweet'
 
-export default class Timeline extends Component {
+export default class Topbar extends Component {
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <div>
-        <Topbar />
-        <div className="tweets">
-          <SkipList />
-        </div>
+      <div className="top-bar">
+        Timeline
+        <div className="compose ion-compose"></div>
+        <Tweet />
       </div>
     );
   }
