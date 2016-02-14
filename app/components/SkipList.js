@@ -83,7 +83,7 @@ export default class Main extends Component {
     return (
       <div>
         {this.state.tweets.map(function(tweet) {
-          return <div key={tweet}>{tweet}</div>
+          return <div className="tweet" key={tweet}>{tweet}</div>
         })}
       </div>
     );

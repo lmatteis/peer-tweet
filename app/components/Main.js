@@ -93,6 +93,7 @@ export default class Main extends Component {
         <div className="flexbox-content">
           <div className="top-bar">
             @{DhtStore.hashToBase58(DhtStore.myHash())}
+            <div className="compose ion-compose"></div>
           </div>
           <div className="tweets">
             <SkipList />
