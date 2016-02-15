@@ -57,7 +57,7 @@ export default class Main extends Component {
         var d = new Date(0)
         d.setUTCMinutes(curr.v.d.readUIntBE(0, curr.v.d.length))
         arr.push(curr.v.t.toString('utf-8') + ' - ' + d)
-      } else if (curr.v.f) { // follow
+      } else if (curr.v.f && !this.props.hashHex) { // follow
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
           var followerCurr = JSONB.parse(followerFeed) // follower head
@@ -66,8 +66,14 @@ export default class Main extends Component {
             var nl = localStorage[n.toString('hex')]
             if (!nl) break;
             followerCurr = JSONB.parse(nl)
-            if (followerCurr.v.t)
+            if (followerCurr.v.t) {
               arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
+              tweets.push({
+                hashHex: curr.v.f.toString('hex'),
+                value: followerCurr.v
+              })
+
+            }
           }
         }
         arr.push('following ' + curr.v.f.toString('hex'))

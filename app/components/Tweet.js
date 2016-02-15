@@ -96,9 +96,13 @@ export default class Tweet extends Component {
         t: new Buffer(this.state.tweet)
       }
     } else if (type == 'follow') {
+      var followHash = DhtStore.base58toHash(this.state.tweet)
+      if (followHash == myHash) {
+        return console.error('cant follow yourself!');
+      }
       iopts.v = {
         // f is a hash
-        f: new Buffer(DhtStore.base58toHash(this.state.tweet), 'hex')
+        f: new Buffer(followHash, 'hex')
       }
     }
 

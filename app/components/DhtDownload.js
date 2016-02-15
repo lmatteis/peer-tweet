@@ -15,7 +15,7 @@ export default class DhtDownload extends Component {
 
   downloadRecursion(hash, isMyFeed, isHead) {
     var curr = localStorage[hash]
-    if (curr/* && !isHead*/) { // we already have it, go to next
+    if (curr && !isHead) { // we already have it, go to next
       curr = JSONB.parse(curr)
       console.log('already have', hash, 'in localstorage')
       if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
@@ -36,12 +36,17 @@ export default class DhtDownload extends Component {
 
     console.log('dht.get()ing', hash)
     dht.get(hash, (err, res) => {
-      if (!res) return;
+      if (!res) {
+        this.setState((state) => ({ stack: state.stack - 1 }))
+        return;
+      }
       console.log('got and storing', hash)
       localStorage[hash] = JSONB.stringify(res)
       if (res.v.next) {
         var next = res.v.next.slice(0, 20) // only first 20 bytes
         this.downloadRecursion(next.toString('hex'), isMyFeed)
+      } else {
+        this.setState((state) => ({ stack: state.stack - 1 }))
       }
 
     })

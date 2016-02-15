@@ -93,7 +93,7 @@ export default class DhtPublish extends Component {
 
 
     // i guess we can start publishing head
-    console.log('starting to publish head')
+    console.log('starting to publish head', head)
     var curr = head
     this.setState((state) => ({ stack: state.stack + 1 }))
     this.publishRecursion(curr, true)
