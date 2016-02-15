@@ -132,6 +132,8 @@ export default class Tweet extends Component {
       next: this.findNextHead(bHash) // this should be at least the first 4 hashes (80 bytes)
     }
     localStorage[myHash] = JSONB.stringify(opts);
+
+    this.props.onTweetOrFollow()
   }
 
   tweetDHT() {

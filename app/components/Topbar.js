@@ -13,9 +13,9 @@ export default class Topbar extends Component {
   render() {
     return (
       <div className="top-bar">
-        Timeline
+        {this.props.hashHex ? '@'+DhtStore.hashToBase58(this.props.hashHex) : 'Timeline'}
         <div className="compose ion-compose"></div>
-        <Tweet />
+        <Tweet onTweetOrFollow={this.props.onTweetOrFollow} />
       </div>
     );
   }
