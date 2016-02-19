@@ -13,7 +13,7 @@ export default class Topbar extends Component {
   render() {
     return (
       <div className="top-bar">
-        {this.props.hashHex ? '@'+DhtStore.hashToBase58(this.props.hashHex) : 'Timeline'}
+        {this.props.title || (this.props.hashHex ? '@'+DhtStore.hashToBase58(this.props.hashHex) : 'Timeline')}
         <div className="compose ion-compose"></div>
         <Tweet onTweetOrFollow={this.props.onTweetOrFollow} />
       </div>

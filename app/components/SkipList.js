@@ -80,7 +80,14 @@ export default class Main extends Component {
       }
     }
     //this.setState({ tweets : arr })
-    this.setState({tweets: tweets})
+    if (this.props.following) {
+      this.setState({tweets: tweets.filter(function (tweet) {
+        if (tweet.value.f)
+          return tweet;
+      })})
+    } else {
+      this.setState({tweets: tweets})
+    }
 
     /*
     dht.get(DhtStore.myHash(), (err, res) => {
@@ -99,7 +106,7 @@ export default class Main extends Component {
   render() {
     return (
       <div>
-        {this.state.tweets.map(function(tweet) {
+        {this.state.tweets.map((tweet) => {
           var text = ''
           var d = new Date(0)
           d.setUTCMinutes(tweet.value.d.readUIntBE(0, tweet.value.d.length))
@@ -108,7 +115,7 @@ export default class Main extends Component {
           } else if (tweet.value.f) { // follow
             text = 'following: ' + DhtStore.hashToBase58(tweet.value.f.toString('hex'))
           }
-          return <div className="tweet" key={text}>
+          return <div className="tweet" key={d.getTime() + text}>
             @{DhtStore.hashToBase58(tweet.hashHex)}
             <div>{text} -- {d.toString()}</div>
           </div>

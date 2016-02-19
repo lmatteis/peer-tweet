@@ -9,13 +9,13 @@ export default class DhtSkipList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      hash: '',
+      base58: '',
       tweets: []
     }
     this.gotHashes = {}
   }
-  onHashChange(e) {
-    this.setState({ hash: e.target.value })
+  onBase58Change(e) {
+    this.setState({ base58: e.target.value })
   }
 
   start(hash) {
@@ -47,7 +47,7 @@ export default class DhtSkipList extends Component {
   skip(e) {
     this.gotHashes = {}
     this.setState({tweets: []})
-    this.start(this.state.hash)
+    this.start(DhtStore.base58toHash(this.state.base58))
     // start from getting head
     //var myHash = DhtStore.myHash()
 
@@ -62,7 +62,7 @@ export default class DhtSkipList extends Component {
     return (
       <div>
         <br />
-        <input type="text" onChange={::this.onHashChange} />
+        <input type="text" onChange={::this.onBase58Change} />
         <button onClick={::this.skip}>dht skiplist iterate</button>
         <div>
           {this.state.tweets.map(function(tweet) {
