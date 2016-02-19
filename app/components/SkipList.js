@@ -13,7 +13,7 @@ export default class Main extends Component {
     }
   }
   componentDidMount() {
-    this.reiterate()
+    this.reiterate(this.props.hashHex, this.props.following)
   }
 
   getTweet(hash) {
@@ -29,11 +29,11 @@ export default class Main extends Component {
     })
   }
 
-  reiterate(e) {
+  reiterate(hashHex, following) {
     this.setState({ tweets: [] })
     // start from getting head
     var myHash = DhtStore.myHash()
-    var myFeed = localStorage[myHash]
+    var myFeed = localStorage[hashHex || myHash]
 
     if (!myFeed) return;
 
@@ -50,14 +50,14 @@ export default class Main extends Component {
       curr = JSONB.parse(l)
 
       tweets.push({
-        hashHex: myHash,
+        hashHex: hashHex || myHash,
         value: curr.v
       })
       if (curr.v.t) {
         var d = new Date(0)
         d.setUTCMinutes(curr.v.d.readUIntBE(0, curr.v.d.length))
         arr.push(curr.v.t.toString('utf-8') + ' - ' + d)
-      } else if (curr.v.f && !this.props.hashHex) { // follow
+      } else if (curr.v.f && !hashHex) { // follow
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
           var followerCurr = JSONB.parse(followerFeed) // follower head
@@ -80,7 +80,7 @@ export default class Main extends Component {
       }
     }
     //this.setState({ tweets : arr })
-    if (this.props.following) {
+    if (following) {
       this.setState({tweets: tweets.filter(function (tweet) {
         if (tweet.value.f)
           return tweet;
@@ -102,6 +102,10 @@ export default class Main extends Component {
     })
     */
   }
+  goToAddress(hashHex) {
+    //console.log(hashHex)
+    this.reiterate(hashHex)
+  }
 
   render() {
     return (
@@ -116,7 +120,7 @@ export default class Main extends Component {
             text = 'following: ' + DhtStore.hashToBase58(tweet.value.f.toString('hex'))
           }
           return <div className="tweet" key={d.getTime() + text}>
-            @{DhtStore.hashToBase58(tweet.hashHex)}
+            <a onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
             <div>{text} -- {d.toString()}</div>
           </div>
         })}
