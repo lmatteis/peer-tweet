@@ -13,6 +13,8 @@ import Settings from './Settings'
 import Following from './Following'
 
 const remote = require('electron').remote;
+import { currentPageStore } from '../stores'
+
 
 export default class Main extends Component {
   constructor(props) {
@@ -23,6 +25,10 @@ export default class Main extends Component {
       page: 'timeline',
       myHead: JSONB.parse(localStorage[this.myHash])
     }
+
+    currentPageStore.subscribe(() => {
+      this.setState(currentPageStore.getState())
+    })
   }
 
   render() {

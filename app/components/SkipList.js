@@ -4,6 +4,7 @@ var JSONB = require('json-buffer')
 import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
+import { currentPageStore } from '../stores'
 
 export default class Main extends Component {
   constructor(props) {
@@ -52,6 +53,7 @@ export default class Main extends Component {
       tweets.push({
         hashHex: hashHex || myHash,
         nickname: head.v.n,
+        avatar: head.v.a,
         value: curr.v
       })
       if (curr.v.t) {
@@ -62,6 +64,7 @@ export default class Main extends Component {
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
           var followerCurr = JSONB.parse(followerFeed) // follower head
+          var originalFollowerCurr = followerCurr
           while (followerCurr.v.next) {
             var n = followerCurr.v.next.slice(0, 20)
             var nl = localStorage[n.toString('hex')]
@@ -71,6 +74,8 @@ export default class Main extends Component {
               arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
               tweets.push({
                 hashHex: curr.v.f.toString('hex'),
+                nickname: originalFollowerCurr.v.n,
+                avatar: originalFollowerCurr.v.a,
                 value: followerCurr.v
               })
 
@@ -105,7 +110,12 @@ export default class Main extends Component {
   }
   goToAddress(hashHex) {
     //console.log(hashHex)
-    this.reiterate(hashHex)
+    currentPageStore.dispatch({
+      type: 'SET_CURRENT_PAGE',
+      page: 'address',
+      hashHex: hashHex
+    })
+    //this.reiterate(hashHex)
   }
 
   render() {
@@ -123,11 +133,14 @@ export default class Main extends Component {
             text = 'following: ' + DhtStore.hashToBase58(tweet.value.f.toString('hex'))
           }
           return <div className="tweet" key={d.getTime() + text}>
-            {tweet.nickname ? <b>{tweet.nickname}</b> : null} <a className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
+            {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
             <div className="minutes-ago">
               {currDateInMinutes - tweetMinutes}m
             </div>
             <div>{text}</div>
+            <div className="avatar">
+              { tweet.avatar ? <img src={tweet.avatar} /> : <div className="default-avatar ion-person"></div> }
+            </div>
           </div>
         })}
       </div>
