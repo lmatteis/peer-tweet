@@ -63,7 +63,7 @@ body {
 .sidebar-item:hover {
   color: #D2D3D5;
 }
-.sidebar-item.selected {
+.selected {
   color: #3093FF;
 }
 
@@ -78,15 +78,20 @@ body {
   color: #60666C;
   position: relative;
 }
-.top-bar .compose {
+.top-bar .compose ,
+.top-bar .search {
   position: absolute;
   top:10px;
   right:20px;
   font-size:25px;
   cursor: pointer;
 }
+.top-bar .search:hover,
 .top-bar .compose:hover {
   color: #3093FF;
+}
+.top-bar .search {
+  right: 50px;
 }
 .tweet {
   margin-bottom:10px;
@@ -100,6 +105,7 @@ body {
   border-bottom: 0;
 }
 .tweet .address {
+  text-decoration: none;
   color: #9D9D9D;
 }
 .tweet .minutes-ago {

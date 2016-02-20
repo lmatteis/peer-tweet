@@ -11,3 +11,14 @@ export const currentPageStore = createStore((state, action) => {
     return state
   }
 })
+
+export const tweetsStore = createStore((state, action) => {
+  switch (action.type) {
+  case 'RESET':
+    return 'RESET'
+  case 'ADD_TWEET':
+    return action.tweet
+  default:
+    return state
+  }
+})

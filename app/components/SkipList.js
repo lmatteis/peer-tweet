@@ -4,7 +4,7 @@ var JSONB = require('json-buffer')
 import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
-import { currentPageStore } from '../stores'
+import { tweetsStore, currentPageStore } from '../stores'
 
 export default class Main extends Component {
   constructor(props) {
@@ -12,6 +12,14 @@ export default class Main extends Component {
     this.state = {
       tweets: []
     }
+
+    tweetsStore.subscribe(() => {
+      var s = tweetsStore.getState()
+      if (s == 'RESET')
+        return this.setState({ tweets: [] })
+
+      this.setState((state) => { tweets: state.tweets.push(s) })
+    })
   }
   componentDidMount() {
     this.reiterate(this.props.hashHex, this.props.following)
@@ -139,7 +147,7 @@ export default class Main extends Component {
             </div>
             <div>{text}</div>
             <div className="avatar">
-              { tweet.avatar ? <img src={tweet.avatar} /> : <div className="default-avatar ion-person"></div> }
+              { tweet.avatar ? <img src={tweet.avatar.toString()} /> : <div className="default-avatar ion-person"></div> }
             </div>
           </div>
         })}
