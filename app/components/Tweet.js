@@ -111,13 +111,18 @@ export default class Tweet extends Component {
     // figure out what `next` is and our `seq`
     if (!myFeed) { // we have nothing locally
       opts.seq = 0 // it's the first tweet
+      opts.v = {}
     } else {
       var head = JSONB.parse(myFeed)
+
+      // replace opts with our head
+      opts.v = head.v
 
       opts.seq = head.seq + 1
       // it has to be 1 hop, 2 hops, 4 hops and 8 hops away
       iopts.v.next = this.findNext(head)
     }
+    console.log('tweet', opts)
 
     // create immutable tweet
     // and have head point to it
@@ -126,11 +131,8 @@ export default class Tweet extends Component {
     localStorage[hash] = JSONB.stringify(iopts)
 
     // now change my head
-    opts.v = {
-      //n: '@lmatteis',
-      d: timestamp,
-      next: this.findNextHead(bHash) // this should be at least the first 4 hashes (80 bytes)
-    }
+    opts.v.d = timestamp
+    opts.v.next = this.findNextHead(bHash)
     localStorage[myHash] = JSONB.stringify(opts);
 
     this.props.onTweetOrFollow()

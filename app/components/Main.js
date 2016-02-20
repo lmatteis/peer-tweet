@@ -20,11 +20,14 @@ export default class Main extends Component {
   constructor(props) {
     super(props)
     this.myHash = DhtStore.myHash()
+    var myLocalstorageHead = localStorage[this.myHash]
 
     this.state = {
       page: 'timeline',
-      myHead: JSONB.parse(localStorage[this.myHash])
+      myHead: { v: {}}
     }
+    if (myLocalstorageHead)
+      this.state.myHead = JSONB.parse(myLocalstorageHead)
 
     currentPageStore.subscribe(() => {
       this.setState(currentPageStore.getState())
@@ -42,6 +45,7 @@ export default class Main extends Component {
     else if (this.state.page == 'settings')
       content = <Settings />
 
+    console.log(this.state.myHead)
     return (
       <div className="flexbox-container">
         <div className="flexbox-sidebar">

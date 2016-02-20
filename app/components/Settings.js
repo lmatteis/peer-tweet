@@ -10,15 +10,19 @@ export default class Settings extends Component {
   constructor(props) {
     super(props)
     this.myHash = DhtStore.myHash()
+    var myLocalstorageHead = localStorage[this.myHash]
     this.state = {
       dhtArray : [],
       getResponse: null,
       putResponse: null,
       getRequest: null,
       putRequest: null,
-
-      myHead: JSONB.parse(localStorage[this.myHash])
+      myHead: { v: {}}
     }
+
+    if (myLocalstorageHead)
+      this.state.myHead = JSONB.parse(myLocalstorageHead)
+
     this.dht = dht
   }
   updateDhtArray(e) {
@@ -75,7 +79,7 @@ export default class Settings extends Component {
 
   onBlur(attrName, e) {
     // read
-    var myHead = JSONB.parse(localStorage[this.myHash])
+    var myHead = this.state.myHead
     if (attrName == 'n')
       myHead.v.n = e.target.value
     else if (attrName == 'a')
