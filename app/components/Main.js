@@ -17,8 +17,11 @@ const remote = require('electron').remote;
 export default class Main extends Component {
   constructor(props) {
     super(props)
+    this.myHash = DhtStore.myHash()
+
     this.state = {
-      page: 'timeline'
+      page: 'timeline',
+      myHead: JSONB.parse(localStorage[this.myHash])
     }
   }
 
@@ -40,7 +43,9 @@ export default class Main extends Component {
                onClick={
               () => this.setState({
                 page: 'timeline',
-              })}></div>
+              })}>
+            {this.state.myHead.v.a ? <img src={this.state.myHead.v.a} /> : null}
+          </div>
           <div className="sidebar-item ion-person"
                onClick={
               () => this.setState({
@@ -54,7 +59,7 @@ export default class Main extends Component {
             })}></div>
           <DhtPublish every="1800000"/>
           <DhtDownload />
-          <div className="sidebar-item ion-gear-a"
+          <div className="sidebar-item ion-gear-a" title="Settings"
             onClick={() => this.setState({ page: 'settings'})}
             ></div>
         </div>

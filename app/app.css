@@ -19,8 +19,8 @@ body {
 .flexbox-sidebar {
   background-color: #F3E1DB;
   width: 82px;
-  border-right: 1px solid #B9ADAD;
-  background: #CBCACE;
+  border-right: 1px solid #08090A;
+  background: #2E3038;
 }
 .sidebar-item {
   position: relative;
@@ -36,14 +36,25 @@ body {
   font-size: 32px;
   cursor: pointer;
   color: #60666C;
+  color: #696B70;
 }
 .sidebar-item.top {
   padding-top:10px;
   padding-bottom:10px;
-  border-bottom: 1px solid #B9ADAD;
+  /*border-bottom: 1px solid #08090A;*/
+  font-size: 40px;
+}
+.sidebar-item.top img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  margin-left: -25px;
 }
 .sidebar-item:hover {
-    color: #3093FF;
+  color: #3093FF;
+  color: #D2D3D5;
 }
 
 .flexbox-content {
@@ -71,5 +82,15 @@ body {
   margin-bottom:10px;
   margin-left: 20px;
   padding-bottom:10px;
-  border-bottom: 1px solid #B9ADAD;
+  border-bottom: 1px solid #EBEBEB;
+  position: relative;
+}
+.tweet .address {
+  color: #9D9D9D;
+}
+.tweet .minutes-ago {
+  position: absolute;
+  right:10px;
+  color: #9D9D9D;
+  top:0;
 }

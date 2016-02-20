@@ -127,7 +127,7 @@ export default class Tweet extends Component {
 
     // now change my head
     opts.v = {
-      n: '@lmatteis',
+      //n: '@lmatteis',
       d: timestamp,
       next: this.findNextHead(bHash) // this should be at least the first 4 hashes (80 bytes)
     }

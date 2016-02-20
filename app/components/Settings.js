@@ -9,16 +9,17 @@ import DhtSkipList from './DhtSkipList'
 export default class Settings extends Component {
   constructor(props) {
     super(props)
+    this.myHash = DhtStore.myHash()
     this.state = {
       dhtArray : [],
       getResponse: null,
       putResponse: null,
       getRequest: null,
       putRequest: null,
+
+      myHead: JSONB.parse(localStorage[this.myHash])
     }
-
     this.dht = dht
-
   }
   updateDhtArray(e) {
     this.setState({
@@ -72,9 +73,37 @@ export default class Settings extends Component {
     this.setState({ putRequest: e.target.value })
   };
 
+  onBlur(attrName, e) {
+    // read
+    var myHead = JSONB.parse(localStorage[this.myHash])
+    if (attrName == 'n')
+      myHead.v.n = e.target.value
+    else if (attrName == 'a')
+      myHead.v.a = e.target.value
+    else if (attrName == 'i')
+      myHead.v.i = e.target.value
+
+    // set
+    localStorage[this.myHash] = JSONB.stringify(myHead)
+  }
+
   render() {
     return (
       <div>
+        <div>
+          <p>
+            My nickname is <input type="text" defaultValue={this.state.myHead.v.n} onBlur={this.onBlur.bind(this, 'n')} />.
+          </p>
+          <p>
+            My avatar is <input type="text" defaultValue={this.state.myHead.v.a} onBlur={this.onBlur.bind(this, 'a')} />.
+          </p>
+          <p>
+            My info is <input type="text" defaultValue={this.state.myHead.v.i} onBlur={this.onBlur.bind(this, 'i')} />.
+          </p>
+
+        </div>
+
+
         My hash: {DhtStore.myHash()}
         <br/>
         My hash base58 converted: {DhtStore.hashToBase58(DhtStore.myHash())}

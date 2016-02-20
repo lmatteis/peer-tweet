@@ -51,6 +51,7 @@ export default class Main extends Component {
 
       tweets.push({
         hashHex: hashHex || myHash,
+        nickname: head.v.n,
         value: curr.v
       })
       if (curr.v.t) {
@@ -112,16 +113,21 @@ export default class Main extends Component {
       <div>
         {this.state.tweets.map((tweet) => {
           var text = ''
+          var currDateInMinutes = Math.floor(Math.floor(Date.now() / 1000) / 60)
+          var tweetMinutes = tweet.value.d.readUIntBE(0, tweet.value.d.length)
           var d = new Date(0)
-          d.setUTCMinutes(tweet.value.d.readUIntBE(0, tweet.value.d.length))
+          d.setUTCMinutes(tweetMinutes)
           if (tweet.value.t) {
             text = tweet.value.t.toString('utf8')
           } else if (tweet.value.f) { // follow
             text = 'following: ' + DhtStore.hashToBase58(tweet.value.f.toString('hex'))
           }
           return <div className="tweet" key={d.getTime() + text}>
-            <a onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
-            <div>{text} -- {d.toString()}</div>
+            {tweet.nickname ? <b>{tweet.nickname}</b> : null} <a className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
+            <div className="minutes-ago">
+              {currDateInMinutes - tweetMinutes}m
+            </div>
+            <div>{text}</div>
           </div>
         })}
       </div>
