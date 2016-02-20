@@ -21,11 +21,12 @@ body {
   width: 82px;
   border-right: 1px solid #08090A;
   background: #2E3038;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .sidebar-item {
-  position: relative;
   z-index: 0;
-  display: inline-block;
   padding-top:5px;
   padding-bottom:5px;
   width: 82px;
@@ -52,9 +53,18 @@ body {
   left: 50%;
   margin-left: -25px;
 }
+.sidebar-item.space {
+  cursor: default;
+  flex-grow:10;
+}
+.sidebar-item.down {
+  font-size: 15px;
+}
 .sidebar-item:hover {
-  color: #3093FF;
   color: #D2D3D5;
+}
+.sidebar-item.selected {
+  color: #3093FF;
 }
 
 .flexbox-content {

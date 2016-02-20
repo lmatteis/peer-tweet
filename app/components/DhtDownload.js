@@ -85,7 +85,7 @@ export default class DhtDownload extends Component {
     // downloads all the feeds i'm following
     // including my own feed - it doesn't dht.get() them if already in localStorage
     return (
-      <div className="sidebar-item ion-ios-cloud-download" onClick={::this.download}>
+      <div className="sidebar-item ion-ios-cloud-download down" onClick={::this.download}>
         {this.state.stack}
       </div>
     );

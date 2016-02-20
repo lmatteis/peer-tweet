@@ -25,12 +25,17 @@ export default class DhtPublish extends Component {
       this.publish()
     }
 
-    setInterval(run, this.props.every || 1800000) // 30 minutes = 1800000 ms
+    this.intervalID = setInterval(run, this.props.every || 1800000) // 30 minutes = 1800000 ms
 
     dht.on('ready', () => {
       //run()
     })
 
+  }
+
+  componentWillUnmount() {
+    this.intervalID && clearInterval(this.intervalID);
+    this.intervalID = false;
   }
 
   getTweet(hash) {
@@ -103,7 +108,7 @@ export default class DhtPublish extends Component {
   render() {
     // this publishes to the DHT, starting from my hash in localStorage
     return (
-      <div className="sidebar-item ion-upload" onClick={::this.publish} disabled={this.state.stack > 0}>
+      <div className="sidebar-item ion-upload down" onClick={::this.publish} disabled={this.state.stack > 0}>
         {this.state.stack}
       </div>
     );

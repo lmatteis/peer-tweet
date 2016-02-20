@@ -45,7 +45,7 @@ export default class Main extends Component {
     else if (this.state.page == 'settings')
       content = <Settings />
 
-    console.log(this.state.myHead)
+    var myHash = DhtStore.myHash()
     return (
       <div className="flexbox-container">
         <div className="flexbox-sidebar">
@@ -56,22 +56,24 @@ export default class Main extends Component {
               })}>
             {this.state.myHead.v.a ? <img src={this.state.myHead.v.a} /> : null}
           </div>
-          <div className="sidebar-item ion-person"
+          <div className={'sidebar-item ion-person' + (this.state.page == 'address' && this.state.hashHex == myHash ? ' selected' : '' )}
                onClick={
               () => this.setState({
                 page: 'address',
-                hashHex: DhtStore.myHash()
+                hashHex: myHash
               })}></div>
-            <div className="sidebar-item ion-ios-people"
+            <div className={'sidebar-item ion-ios-people' + (this.state.page == 'following' ? ' selected' : '' )}
              onClick={
             () => this.setState({
               page: 'following'
             })}></div>
-          <DhtPublish every="1800000"/>
-          <DhtDownload />
-          <div className="sidebar-item ion-gear-a" title="Settings"
+          <div className={'sidebar-item ion-gear-a' + (this.state.page == 'settings' ? ' selected' : '' )} 
+            title="Settings"
             onClick={() => this.setState({ page: 'settings'})}
             ></div>
+          <div className="sidebar-item space"></div>
+          <DhtPublish every="1800000"/>
+          <DhtDownload />
         </div>
         <div className="flexbox-content">
           {content}
