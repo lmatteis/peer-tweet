@@ -195,7 +195,7 @@ export default class Tweet extends Component {
   render() {
     return (
       <div>
-        <input type="text" onChange={::this.onTweetChange} />
+        <input type="text" onChange={::this.onTweetChange} maxLength="140" />
         <button onClick={this.tweet.bind(this, 'tweet')}>Tweet</button>
         <button onClick={this.tweet.bind(this, 'follow')}>Follow</button>
       </div>

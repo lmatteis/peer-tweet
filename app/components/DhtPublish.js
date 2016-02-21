@@ -108,7 +108,7 @@ export default class DhtPublish extends Component {
   render() {
     // this publishes to the DHT, starting from my hash in localStorage
     return (
-      <div className="sidebar-item ion-upload down" onClick={::this.publish} disabled={this.state.stack > 0}>
+      <div className="sidebar-item ion-upload down" onClick={::this.publish} disabled={this.state.stack > 0} title="Publish to the DHT, starting from my feed">
         {this.state.stack}
       </div>
     );

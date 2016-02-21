@@ -29,9 +29,12 @@ export default class Main extends Component {
     if (myLocalstorageHead)
       this.state.myHead = JSONB.parse(myLocalstorageHead)
 
-    currentPageStore.subscribe(() => {
+    this.unsubscribe = currentPageStore.subscribe(() => {
       this.setState(currentPageStore.getState())
     })
+  }
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   render() {
@@ -49,25 +52,29 @@ export default class Main extends Component {
     return (
       <div className="flexbox-container">
         <div className="flexbox-sidebar">
-          <div className="sidebar-item ion-home top"
-               onClick={
-              () => this.setState({
-                page: 'timeline',
-              })}>
-            {this.state.myHead.v.a ? <img src={this.state.myHead.v.a} /> : null}
-          </div>
-          <div className={'sidebar-item ion-person' + (this.state.page == 'address' && this.state.hashHex == myHash ? ' selected' : '' )}
+          <div className="sidebar-item ion-person top" title="My feed"
                onClick={
               () => this.setState({
                 page: 'address',
                 hashHex: myHash
-              })}></div>
-            <div className={'sidebar-item ion-ios-people' + (this.state.page == 'following' ? ' selected' : '' )}
+              })}>
+
+            {this.state.myHead.v.a ? <img src={this.state.myHead.v.a} /> : null}
+          </div>
+          <div className={'sidebar-item ion-home' + (this.state.page == 'timeline' && this.state.hashHex == myHash ? ' selected' : '' )}
+               title="Timeline"
+               onClick={
+              () => this.setState({
+                page: 'timeline',
+              })}>
+          </div>
+          <div className={'sidebar-item ion-ios-people' + (this.state.page == 'following' ? ' selected' : '' )}
+             title="Feeds I'm following"
              onClick={
             () => this.setState({
               page: 'following'
             })}></div>
-          <div className={'sidebar-item ion-gear-a' + (this.state.page == 'settings' ? ' selected' : '' )} 
+          <div className={'sidebar-item ion-gear-a' + (this.state.page == 'settings' ? ' selected' : '' )}
             title="Settings"
             onClick={() => this.setState({ page: 'settings'})}
             ></div>

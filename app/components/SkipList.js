@@ -13,7 +13,7 @@ export default class Main extends Component {
       tweets: []
     }
 
-    tweetsStore.subscribe(() => {
+    this.unsubscribe = tweetsStore.subscribe(() => {
       var s = tweetsStore.getState()
       if (s == 'RESET')
         return this.setState({ tweets: [] })
@@ -23,6 +23,9 @@ export default class Main extends Component {
   }
   componentDidMount() {
     this.reiterate(this.props.hashHex, this.props.following)
+  }
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   getTweet(hash) {

@@ -5,6 +5,7 @@ body {
   margin:0;
   padding:0;
   font: 200 14px "Helvetica Neue","Helvetica","Arial",sans-serif;
+  letter-spacing: 0.4px;
   height:100%;
   -webkit-font-smoothing: antialiased;
 }
@@ -63,8 +64,12 @@ body {
 .sidebar-item:hover {
   color: #D2D3D5;
 }
+.sidebar-item:last-child {
+  margin-bottom: 10px;
+}
 .selected {
   color: #3093FF;
+  color: #D2D3D5;
 }
 
 .flexbox-content {
@@ -100,6 +105,7 @@ body {
   border-bottom: 1px solid #EBEBEB;
   position: relative;
   min-height: 50px;
+  padding-right: 10px;
 }
 .tweet:last-child {
   border-bottom: 0;
@@ -107,6 +113,11 @@ body {
 .tweet .address {
   text-decoration: none;
   color: #9D9D9D;
+  width: 100px;
+  display: inline-block;
+  vertical-align: bottom;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .tweet .minutes-ago {
   position: absolute;
