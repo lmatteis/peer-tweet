@@ -2,6 +2,9 @@
 
 > Decentralized feeds using BitTorrent's DHT. Idea from Arvid and The_8472 "DHT RSS feeds" http://libtorrent.org/dht_rss.html
 
+## Screenshot
+
+![PeerTweet](http://i.imgur.com/Kow6cVH.png)
 
 ## Abstract
 
@@ -11,11 +14,9 @@ Once you find other PeerTweet addresses you trust (and are not spam), you can fo
 
 <!-- In terms of storing tweets on the network, things are implemented similarly to this proposal: http://libtorrent.org/dht_rss.html - Each tweet is an immutable object which is `put()` on the network and contains an important `next` property which a list of exactly 3 hashes and allows for the implementation of a Skip list. These 3 hashes are the hashes of the item 1, 2 and 4 hops away. This allows for parallel `get()` requests when iterating over someones feed. The head is the only mutable object of the feed and contains information such as the user's name, a little description and an HTTP url to their avatar. -->
 
+**Alpha quality** you probably only want to use this if you like to send pull requests fixing things :)
 
 
-## Screenshot
-
-![PeerTweet](http://i.imgur.com/Kow6cVH.png)
 
 ## How does it work?
 
