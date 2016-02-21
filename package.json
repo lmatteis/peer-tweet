@@ -134,6 +134,7 @@
   },
   "dependencies": {
     "base-x": "^1.0.3",
+    "bencode": "^0.7.0",
     "bittorrent-dht": "^6.4.0",
     "ed25519-supercop": "^1.0.2",
     "electron-debug": "^0.5.1",
