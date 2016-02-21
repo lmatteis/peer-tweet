@@ -25,25 +25,25 @@ PeerTweet differentiates between two types of items:
 
 1. **Your feed head**. Which is the only mutable item of your feed, and is what your followers use to download your items and find updates. Your head's hash is what your followers use to know about updates - it's your identity and can be used to let others know about your feed (similar to your `@lmattes` handle). The feed head is roughly structured as follows:
 
-```
-{
-  "d": <unsigned int of minutes passed from epoch until head was modified>,
-  "next": <up to 80 bytes of the next 4 items in the feed, directly 1,2,3 and 4 hops away. 20 bytes each.>,
-  "n": <utf8 name of the feed>,
-  "a": <utf8 http url of an image to render as your avatar>,
-  "i": <utf8 description of your feed>
-}
-```
+  ```
+  {
+    "d": <unsigned int of minutes passed from epoch until head was modified>,
+    "next": <up to 80 bytes of the next 4 items in the feed, directly 1,2,3 and 4 hops away. 20 bytes each.>,
+    "n": <utf8 name of the feed>,
+    "a": <utf8 http url of an image to render as your avatar>,
+    "i": <utf8 description of your feed>
+  }
+  ```
 
 2. **Your feed items**. These are immutable items which contain your actual tweets and are structured:
 
-```
-{
-  "d": <unsigned int of minutes passed from epoch until when item was created>,
-  "next": <up to 80 bytes of the next 4 items in the feed, 1, 2, 4 and 8 hops away. 20 bytes each.>,
-  "t": <utf8 contents of your tweet. up to 140 chars>
-}
-```
+  ```
+  {
+    "d": <unsigned int of minutes passed from epoch until when item was created>,
+    "next": <up to 80 bytes of the next 4 items in the feed, 1, 2, 4 and 8 hops away. 20 bytes each.>,
+    "t": <utf8 contents of your tweet. up to 140 chars>
+  }
+  ```
 
 ### Skip lists
 
