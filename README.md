@@ -13,13 +13,49 @@ Once you find other PeerTweet addresses you trust (and are not spam), you can fo
 
 
 
-# Screenshot
+## Screenshot
 
 ![PeerTweet](http://i.imgur.com/Kow6cVH.png)
 
+## How does it work?
+
+PeerTweet follows most of the implementation guidelines provided by the DHT RSS feed proposal http://libtorrent.org/dht_rss.html. We implemented it on top of the current [BEP44](http://bittorrent.org/beps/bep_0044.html) proposal which provides `get()` and `put()` functionality over the DHT network. This means that, rather than only using the DHT to announce which torrents one is currently downloading, we can use it to also put and get small amounts of data (roughly 1000 bytes).
+
+PeerTweet differentiates between two types of items:
+
+1. **Your feed head**. Which is the only mutable item of your feed, and is what your followers use to download your items and find updates. Your head's hash is what your followers use to know about updates - it's your identity and can be used to let others know about your feed (similar to your `@lmattes` handle). The feed head is roughly structured as follows:
+
+```
+{
+  "d": <unsigned int of minutes passed from epoch until head was modified>,
+  "next": <up to 80 bytes of the next 4 items in the feed, directly 1,2,3 and 4 hops away. 20 bytes each.>,
+  "n": <utf8 name of the feed>,
+  "a": <utf8 http url of an image to render as your avatar>,
+  "i": <utf8 description of your feed>
+}
+```
+
+2. **Your feed items**. These are immutable items which contain your actual tweets and are structured:
+
+```
+{
+  "d": <unsigned int of minutes passed from epoch until when item was created>,
+  "next": <up to 80 bytes of the next 4 items in the feed, 1, 2, 4 and 8 hops away. 20 bytes each.>,
+  "t": <utf8 contents of your tweet. up to 140 chars>
+}
+```
+
+### Skip lists
+
+The reason items have multiple pointers to other items in the list is to allow for parallel lookups. Our [skip list](https://en.wikipedia.org/wiki/Skip_list) implementation differs from regular implementations and is targeted for network lookups, where each item contains 4 pointers so that when we receive an item, we can issue 4 `get()` requests in parallel to other items in the list. This is crucial for accessing user's feeds in a timely manner because DHT lookups have unpredictable response times.
 
 
-## Install
+### Following
+
+When you follow someone, you're essentially informing your client to download their feed and republish it every so often. The DHT network is not a persistent one, and items quickly drop out of the network after roughly 30 minutes. In order to keep things alive, having many followers is crucial for the uptime of your feed. Otherwise you can still have a server somewhere running 24/7 which keeps your feed alive by republishing items every 30 minutes.
+
+
+# Install
 
 Install dependencies.
 
