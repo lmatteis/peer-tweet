@@ -53,14 +53,13 @@ export default class Main extends Component {
 
   reiterate(hashHex, following) {
     this.setState({ tweets: [] })
-    var myFeed = localStorage[hashHex]
+    var feed = localStorage[hashHex]
 
-    if (!myFeed) return;
+    if (!feed) return;
 
-    var arr = []
     var tweets = []
 
-    var curr = JSONB.parse(myFeed)
+    var curr = JSONB.parse(feed)
 
     while (curr.v.next) { // only first 10
       // curr.next is a buffer of many bytes, only get the first 20
@@ -69,21 +68,15 @@ export default class Main extends Component {
       if (!l) break;
       curr = JSONB.parse(l)
 
-      // if (!following && tweets.length >= this.pageLength)
-      //   break;
       tweets.push({
+        key: next.toString('hex'),
         hashHex: this.headHex,
         nickname: this.head.v.n,
         avatar: this.head.v.a,
         value: curr.v
       })
 
-
-      if (curr.v.t) {
-        var d = new Date(0)
-        d.setUTCMinutes(curr.v.d.readUIntBE(0, curr.v.d.length))
-        arr.push(curr.v.t.toString('utf-8') + ' - ' + d)
-      } else if (curr.v.f && this.props.timeline) { // follow
+      if (curr.v.f && this.props.timeline) { // follow
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
           var followerCurr = JSONB.parse(followerFeed) // follower head
@@ -94,10 +87,9 @@ export default class Main extends Component {
             if (!nl) break;
             followerCurr = JSONB.parse(nl)
             if (followerCurr.v.t) {
-              arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
-              // if (!following && tweets.length >= this.pageLength)
-              //   break;
+              //arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
               tweets.push({
+                key: n.toString('hex'),
                 hashHex: curr.v.f.toString('hex'),
                 nickname: originalFollowerCurr.v.n,
                 avatar: originalFollowerCurr.v.a,
@@ -106,7 +98,7 @@ export default class Main extends Component {
             }
           }
         }
-        arr.push('following ' + curr.v.f.toString('hex'))
+        //arr.push('following ' + curr.v.f.toString('hex'))
       }
     }
     //this.setState({ tweets : arr })
@@ -165,10 +157,6 @@ export default class Main extends Component {
   }
 
   render() {
-    var lastTweet = this.state.tweets[this.state.tweets.length - 2]
-    if (lastTweet && lastTweet.value && lastTweet.value.next) {
-      var lastHashHex = lastTweet.value.next.slice(0, 20).toString('hex')
-    }
     return (
       <div>
         {this.state.tweets.map((tweet) => {
@@ -181,7 +169,7 @@ export default class Main extends Component {
           } else if (tweet.value.f) { // follow
             text = 'following: ' + DhtStore.hashToBase58(tweet.value.f.toString('hex'))
           }
-          return <div className="tweet" key={d.getTime() + text}>
+          return <div className="tweet" key={tweet.key}>
             {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
             <div className="minutes-ago">
               {this.showTime(tweetMinutes)}
@@ -192,7 +180,6 @@ export default class Main extends Component {
             </div>
           </div>
         })}
-        { (lastHashHex) ? <a href="#" onClick={::this.reiterate.bind(this, lastHashHex, false)}>Load more tweets</a> : null}
       </div>
     );
   }
