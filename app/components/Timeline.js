@@ -18,7 +18,7 @@ export default class Timeline extends Component {
       <div>
         <Topbar onTweetOrFollow={() => this.setState({ date: Date.now() }) }/>
         <div className="tweets">
-          <SkipList key={this.state.date}/>
+          <SkipList key={this.state.date} timeline="true"/>
         </div>
       </div>
     );

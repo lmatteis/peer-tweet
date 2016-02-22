@@ -12,7 +12,7 @@ export default class Main extends Component {
     this.state = {
       tweets: []
     }
-    this.pageLength = 2
+    this.pageLength = 3
 
     this.unsubscribe = tweetsStore.subscribe(() => {
       var s = tweetsStore.getState()
@@ -23,7 +23,16 @@ export default class Main extends Component {
     })
   }
   componentDidMount() {
-    this.reiterate(this.props.hashHex, this.props.following)
+    var localHashHex = localStorage[this.props.hashHex]
+    if (localHashHex) {
+      this.head = JSONB.parse(localHashHex)
+      this.headHex = this.props.hashHex
+    } else {
+      this.headHex = DhtStore.myHash()
+      if (localStorage[this.headHex])
+        this.head = JSONB.parse(localStorage[this.headHex])
+    }
+    this.reiterate(this.headHex, this.props.following)
   }
   componentWillUnmount() {
     this.unsubscribe()
@@ -44,17 +53,15 @@ export default class Main extends Component {
 
   reiterate(hashHex, following) {
     this.setState({ tweets: [] })
-    // start from getting head
-    var myHash = DhtStore.myHash()
-    var myFeed = localStorage[hashHex || myHash]
+    var myFeed = localStorage[hashHex]
 
     if (!myFeed) return;
 
-    var head = JSONB.parse(myFeed)
-
     var arr = []
     var tweets = []
-    var curr = head
+
+    var curr = JSONB.parse(myFeed)
+
     while (curr.v.next) { // only first 10
       // curr.next is a buffer of many bytes, only get the first 20
       var next = curr.v.next.slice(0, 20)
@@ -65,9 +72,9 @@ export default class Main extends Component {
       // if (!following && tweets.length >= this.pageLength)
       //   break;
       tweets.push({
-        hashHex: hashHex || myHash,
-        nickname: head.v.n,
-        avatar: head.v.a,
+        hashHex: this.headHex,
+        nickname: this.head.v.n,
+        avatar: this.head.v.a,
         value: curr.v
       })
 
@@ -76,7 +83,7 @@ export default class Main extends Component {
         var d = new Date(0)
         d.setUTCMinutes(curr.v.d.readUIntBE(0, curr.v.d.length))
         arr.push(curr.v.t.toString('utf-8') + ' - ' + d)
-      } else if (curr.v.f && !hashHex) { // follow
+      } else if (curr.v.f && this.props.timeline) { // follow
         var followerFeed = localStorage[curr.v.f.toString('hex')]
         if (followerFeed) {
           var followerCurr = JSONB.parse(followerFeed) // follower head
@@ -158,6 +165,10 @@ export default class Main extends Component {
   }
 
   render() {
+    var lastTweet = this.state.tweets[this.state.tweets.length - 2]
+    if (lastTweet && lastTweet.value && lastTweet.value.next) {
+      var lastHashHex = lastTweet.value.next.slice(0, 20).toString('hex')
+    }
     return (
       <div>
         {this.state.tweets.map((tweet) => {
@@ -181,6 +192,7 @@ export default class Main extends Component {
             </div>
           </div>
         })}
+        { (lastHashHex) ? <a href="#" onClick={::this.reiterate.bind(this, lastHashHex, false)}>Load more tweets</a> : null}
       </div>
     );
   }
