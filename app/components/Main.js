@@ -61,7 +61,7 @@ export default class Main extends Component {
 
             {this.state.myHead.v.a ? <img src={this.state.myHead.v.a} /> : null}
           </div>
-          <div className={'sidebar-item ion-home' + (this.state.page == 'timeline' && this.state.hashHex == myHash ? ' selected' : '' )}
+          <div className={'sidebar-item ion-home' + (this.state.page == 'timeline' ? ' selected' : '' )}
                title="Timeline"
                onClick={
               () => this.setState({

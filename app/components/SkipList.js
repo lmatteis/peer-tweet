@@ -5,6 +5,7 @@ import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
 import { tweetsStore, currentPageStore } from '../stores'
+const shell = require('electron').shell;
 
 export default class Main extends Component {
   constructor(props) {
@@ -167,14 +168,29 @@ export default class Main extends Component {
           if (tweet.value.t) {
             text = tweet.value.t.toString('utf8')
           } else if (tweet.value.f) { // follow
-            text = 'following: ' + DhtStore.hashToBase58(tweet.value.f.toString('hex'))
+            text = <span>Following <a href="#" onClick={this.goToAddress.bind(this, tweet.value.f.toString('hex'))}>@{DhtStore.hashToBase58(tweet.value.f.toString('hex'))}</a></span>
           }
+
+          var urlPattern = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/g
+
+          var url = text.toString().match(urlPattern)
+
+          if (url) {
+            var parts = text.split(url[0]);
+            text = []
+            text[0] = parts[0]
+            text[1] = <a href="#" onClick={() => shell.openExternal(url[0])}>{url[0]}</a>
+            text[2] = parts[1];
+          }
+
+
           return <div className="tweet" key={tweet.key}>
             {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
             <div className="minutes-ago">
               {this.showTime(tweetMinutes)}
             </div>
             <div>{text}</div>
+            { (url) ? <img className="media" src={url} /> : null}
             <div className="avatar">
               { tweet.avatar ? <img src={tweet.avatar.toString()} /> : <div className="default-avatar ion-person"></div> }
             </div>
