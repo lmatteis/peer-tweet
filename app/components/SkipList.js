@@ -12,6 +12,7 @@ export default class Main extends Component {
     this.state = {
       tweets: []
     }
+    this.pageLength = 2
 
     this.unsubscribe = tweetsStore.subscribe(() => {
       var s = tweetsStore.getState()
@@ -54,19 +55,23 @@ export default class Main extends Component {
     var arr = []
     var tweets = []
     var curr = head
-    while (curr.v.next/* && arr.length < 10*/) { // only first 10
+    while (curr.v.next) { // only first 10
       // curr.next is a buffer of many bytes, only get the first 20
       var next = curr.v.next.slice(0, 20)
       var l = localStorage[next.toString('hex')]
       if (!l) break;
       curr = JSONB.parse(l)
 
+      // if (!following && tweets.length >= this.pageLength)
+      //   break;
       tweets.push({
         hashHex: hashHex || myHash,
         nickname: head.v.n,
         avatar: head.v.a,
         value: curr.v
       })
+
+
       if (curr.v.t) {
         var d = new Date(0)
         d.setUTCMinutes(curr.v.d.readUIntBE(0, curr.v.d.length))
@@ -83,13 +88,14 @@ export default class Main extends Component {
             followerCurr = JSONB.parse(nl)
             if (followerCurr.v.t) {
               arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
+              // if (!following && tweets.length >= this.pageLength)
+              //   break;
               tweets.push({
                 hashHex: curr.v.f.toString('hex'),
                 nickname: originalFollowerCurr.v.n,
                 avatar: originalFollowerCurr.v.a,
                 value: followerCurr.v
               })
-
             }
           }
         }
@@ -103,7 +109,14 @@ export default class Main extends Component {
           return tweet;
       })})
     } else {
-      this.setState({tweets: tweets})
+      this.setState({tweets: tweets.sort(function (a, b) {
+        var aTweetMinutes = a.value.d.readUIntBE(0, a.value.d.length)
+        var bTweetMinutes = b.value.d.readUIntBE(0, b.value.d.length)
+
+        if(aTweetMinutes > bTweetMinutes) return -1;
+        if(aTweetMinutes < bTweetMinutes) return 1;
+        return 0;
+      })})
     }
 
     /*
@@ -129,12 +142,26 @@ export default class Main extends Component {
     //this.reiterate(hashHex)
   }
 
+  showTime(tweetMinutes) {
+    var currDateInMinutes = Math.floor(Math.floor(Date.now() / 1000) / 60)
+    var minutesPassed = (currDateInMinutes - tweetMinutes)
+    if (minutesPassed < 60)
+      return Math.floor(minutesPassed) + 'm'
+    var hoursPassed = minutesPassed / 60
+    if (hoursPassed < 24)
+      return Math.floor(hoursPassed) + 'h'
+    var daysPassed = hoursPassed / 24
+    if (daysPassed < 30)
+      return Math.floor(daysPassed) + 'd'
+    var monthsPassed = daysPassed / 30
+    return Math.floor(monthsPassed) + 'month'
+  }
+
   render() {
     return (
       <div>
         {this.state.tweets.map((tweet) => {
           var text = ''
-          var currDateInMinutes = Math.floor(Math.floor(Date.now() / 1000) / 60)
           var tweetMinutes = tweet.value.d.readUIntBE(0, tweet.value.d.length)
           var d = new Date(0)
           d.setUTCMinutes(tweetMinutes)
@@ -146,7 +173,7 @@ export default class Main extends Component {
           return <div className="tweet" key={d.getTime() + text}>
             {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
             <div className="minutes-ago">
-              {currDateInMinutes - tweetMinutes}m
+              {this.showTime(tweetMinutes)}
             </div>
             <div>{text}</div>
             <div className="avatar">

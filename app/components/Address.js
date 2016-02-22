@@ -19,7 +19,7 @@ export default class Address extends Component {
       <div>
         <Topbar hashHex={this.props.hashHex} onTweetOrFollow={() => this.setState({ date: Date.now() }) } />
         <div className="tweets">
-          <SkipList hashHex={this.props.hashHex} key={this.state.date} />
+          <SkipList hashHex={this.props.hashHex} key={this.props.hashHex + this.state.date} />
         </div>
       </div>
     );
