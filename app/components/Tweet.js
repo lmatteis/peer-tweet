@@ -114,13 +114,17 @@ export default class Tweet extends Component {
       opts.v = {}
     } else {
       var head = JSONB.parse(myFeed)
+      if (!head.v.next) { // we updated our profile before posting first tweet
+        opts.seq = 0 // it's the first tweet
+        opts.v = {}
+      } else {
+        // replace opts with our head
+        opts.v = head.v
 
-      // replace opts with our head
-      opts.v = head.v
-
-      opts.seq = head.seq + 1
-      // it has to be 1 hop, 2 hops, 4 hops and 8 hops away
-      iopts.v.next = this.findNext(head)
+        opts.seq = head.seq + 1
+        // it has to be 1 hop, 2 hops, 4 hops and 8 hops away
+        iopts.v.next = this.findNext(head)
+      }
     }
     console.log('tweet', opts)
 
