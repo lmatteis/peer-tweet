@@ -13,6 +13,7 @@ export default class DhtSkipList extends Component {
       base58: '',
     }
     this.gotHashes = {}
+    this.gettingHashes = {}
   }
   onBase58Change(e) {
     this.setState({ base58: e.target.value })
@@ -21,10 +22,14 @@ export default class DhtSkipList extends Component {
   start(hash, headHex) {
     if (this.gotHashes[hash])
       return console.log('we already got this hash', hash)
-    if (Object.keys(this.gotHashes).length == 10)
+    if (this.gettingHashes[hash])
+      return console.log('already getting this hash', hash)
+
+    if (Object.keys(this.gettingHashes).length >= 10)
       return console.log('we got 10 items!')
 
     console.log('getting', hash.toString('hex'))
+    this.gettingHashes[hash] = true
     dht.get(hash, (err, res) => {
       // concurrently get all hashes in all .next fields :) and cache the hash in this.state
       // hashes are in 20 bytes chunks in .next
@@ -33,13 +38,15 @@ export default class DhtSkipList extends Component {
         var action = {
           type: 'ADD_TWEET',
           tweet: {
+            key: hash,
             hashHex: headHex,
             nickname: this.gotHashes[headHex].v.n,
             avatar: this.gotHashes[headHex].v.a,
             value: res.v
           }
         }
-        tweetsStore.dispatch(action)
+        if (hash != headHex) // it's head, don't add it to the view
+          tweetsStore.dispatch(action)
         /*
         if (res.v.t)
           this.setState((state) => { tweets: state.tweets.push(res.v.t.toString('utf-8')) })
@@ -62,6 +69,7 @@ export default class DhtSkipList extends Component {
   skip(e) {
     tweetsStore.dispatch({ type: 'RESET'})
     this.gotHashes = {}
+    this.gettingHashes = {}
     var headHex = DhtStore.base58toHash(this.state.base58)
     this.start(headHex, headHex)
     // start from getting head

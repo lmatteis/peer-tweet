@@ -53,7 +53,10 @@ export default class DhtPublish extends Component {
   publishRecursion(curr, isMyFeed) {
 
     dht.put(curr, (err, res) => {
-      if (err) return console.error(err);
+      if (!res || err) {
+        this.setState((state) => ({ stack: state.stack - 1 }))
+        return console.error(err);
+      }
       console.log('published', res)
 
       if (!curr || !curr.v.next) {
