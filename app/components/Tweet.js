@@ -116,7 +116,7 @@ export default class Tweet extends Component {
       var head = JSONB.parse(myFeed)
       if (!head.v.next) { // we updated our profile before posting first tweet
         opts.seq = 0 // it's the first tweet
-        opts.v = {}
+        opts.v = head.v
       } else {
         // replace opts with our head
         opts.v = head.v
