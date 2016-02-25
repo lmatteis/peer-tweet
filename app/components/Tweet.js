@@ -139,7 +139,15 @@ export default class Tweet extends Component {
     opts.v.next = this.findNextHead(bHash)
     localStorage[myHash] = JSONB.stringify(opts);
 
+    // now publish to DHT both head and immutable tweet
+    dht.put(opts, (err, res) => { // published head
+      if (err) return console.error(res);
+      dht.put(iopts, (err, res) => { // published tweet
+        if (err) return console.error(res);
+      })
+    })
     this.props.onTweetOrFollow()
+
   }
 
   tweetDHT() {
