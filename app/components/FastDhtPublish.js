@@ -85,19 +85,13 @@ export default class FastDhtPublish extends Component {
 
     // get all heads hashes in hex i'm suppose to publish
     var headsHashesHex = []
-    headsHashesHex.push(myHash) // start with mine
-
-    var curr = myHead
-    while (curr) {
-      if (curr.v.f) {
-        headsHashesHex.push(curr.v.f.toString('hex'))
-      }
-      curr = curr.v.next
-      if (curr) curr = curr.slice(0, 20)
-      if (curr) curr = curr.toString('hex')
-      if (curr) curr = localStorage[curr]
-      if (curr) curr = JSONB.parse(curr)
+    // find all followers
+    if (localStorage.following) {
+      var following = JSON.parse(localStorage.following)
+      headsHashesHex = following
     }
+    // add my head to heads
+    headsHashesHex.push(myHash)
 
     console.log('headsHashesHex', headsHashesHex)
 

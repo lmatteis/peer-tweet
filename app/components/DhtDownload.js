@@ -13,16 +13,12 @@ export default class DhtDownload extends Component {
     }
   }
 
-  downloadRecursion(hash, isMyFeed, isHead) {
+  downloadRecursion(hash, isHead) {
     var curr = localStorage[hash]
     if (curr && !isHead) { // we already have it, go to next
       curr = JSONB.parse(curr)
       console.log('already have', hash, 'in localstorage')
-      if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
-        console.log('have a follower. branching out')
-        this.setState((state) => ({ stack: state.stack + 1 }))
-        this.downloadRecursion(curr.v.f.toString('hex'), false, true)
-      }
+
       if (!curr.v.next) {
         this.setState((state) => ({ stack: state.stack - 1 }))
         if (this.state.stack == 0) {
@@ -31,7 +27,7 @@ export default class DhtDownload extends Component {
         return;
       }
       var next = curr.v.next.slice(0, 20) // only first 20 bytes
-      return this.downloadRecursion(next.toString('hex'), isMyFeed)
+      return this.downloadRecursion(next.toString('hex'))
     }
 
     console.log('dht.get()ing', hash)
@@ -44,7 +40,7 @@ export default class DhtDownload extends Component {
       localStorage[hash] = JSONB.stringify(res)
       if (res.v.next) {
         var next = res.v.next.slice(0, 20) // only first 20 bytes
-        this.downloadRecursion(next.toString('hex'), isMyFeed)
+        this.downloadRecursion(next.toString('hex'))
       } else {
         this.setState((state) => ({ stack: state.stack - 1 }))
       }
@@ -74,10 +70,28 @@ export default class DhtDownload extends Component {
     // start from getting head
     var myHash = DhtStore.myHash()
 
-    // i guess we can start publishing head
-    console.log('starting to download head')
-    this.setState((state) => ({ stack: state.stack + 1 }))
-    this.downloadRecursion(myHash, true, false)
+    var heads = []
+    // find all followers
+    if (localStorage.following) {
+      var following = JSON.parse(localStorage.following)
+      heads = following
+    }
+    // add my head to heads
+    heads.push(myHash)
+
+
+    for(var i=0; i<heads.length; i++) {
+      var head = heads[i]
+      console.log('starting to download', head)
+      this.setState((state) => ({ stack: state.stack + 1 }))
+      this.downloadRecursion(head, true)
+    }
+
+    // if (curr.v.f && isMyFeed) { // we have a follow hash! branch out!
+    //   console.log('have a follower. branching out')
+    //   this.setState((state) => ({ stack: state.stack + 1 }))
+    //   this.downloadRecursion(curr.v.f.toString('hex'), false, true)
+    // }
 
   }
 

@@ -60,77 +60,90 @@ export default class Main extends Component {
 
     var tweets = []
 
-    var curr = JSONB.parse(feed)
-
-    while (curr.v.next) { // only first 10
-      // curr.next is a buffer of many bytes, only get the first 20
-      var next = curr.v.next.slice(0, 20)
-      var l = localStorage[next.toString('hex')]
-      if (!l) break;
-      curr = JSONB.parse(l)
-
-      tweets.push({
-        key: next.toString('hex'),
-        hashHex: this.headHex,
-        nickname: this.head.v.n,
-        avatar: this.head.v.a,
-        value: curr.v
-      })
-
-      if (curr.v.f && this.props.timeline) { // follow
-        var followerFeed = localStorage[curr.v.f.toString('hex')]
-        if (followerFeed) {
-          var followerCurr = JSONB.parse(followerFeed) // follower head
-          var originalFollowerCurr = followerCurr
-          while (followerCurr.v.next) {
-            var n = followerCurr.v.next.slice(0, 20)
-            var nl = localStorage[n.toString('hex')]
-            if (!nl) break;
-            followerCurr = JSONB.parse(nl)
-            if (followerCurr.v.t) {
-              //arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
-              tweets.push({
-                key: n.toString('hex'),
-                hashHex: curr.v.f.toString('hex'),
-                nickname: originalFollowerCurr.v.n,
-                avatar: originalFollowerCurr.v.a,
-                value: followerCurr.v
-              })
-            }
-          }
-        }
-        //arr.push('following ' + curr.v.f.toString('hex'))
-      }
-    }
-    //this.setState({ tweets : arr })
     if (following) {
-      this.setState({tweets: tweets.filter(function (tweet) {
-        if (tweet.value.f)
-          return tweet;
-      })})
+      var foll = localStorage.following
+      if (foll) {
+        foll = JSON.parse(foll)
+        for(var i=0; i<foll.length; i++) {
+          var fhash = foll[i]
+          var followingData = localStorage[fhash]
+          if (followingData) followingData = JSONB.parse(followingData)
+
+          tweets.push({
+            key: fhash,
+            hashHex: fhash,
+            nickname: followingData.v.n,
+            avatar: followingData.v.a,
+            value: followingData.v
+          })
+
+        }
+      }
     } else {
-      this.setState({tweets: tweets.sort(function (a, b) {
-        var aTweetMinutes = a.value.d.readUIntBE(0, a.value.d.length)
-        var bTweetMinutes = b.value.d.readUIntBE(0, b.value.d.length)
+      var curr = JSONB.parse(feed)
 
-        if(aTweetMinutes > bTweetMinutes) return -1;
-        if(aTweetMinutes < bTweetMinutes) return 1;
-        return 0;
-      })})
-    }
+      while (curr.v.next) { // only first 10
+        // curr.next is a buffer of many bytes, only get the first 20
+        var next = curr.v.next.slice(0, 20)
+        var l = localStorage[next.toString('hex')]
+        if (!l) break;
+        curr = JSONB.parse(l)
 
-    /*
-    dht.get(DhtStore.myHash(), (err, res) => {
-      console.log('got head', res)
+        tweets.push({
+          key: next.toString('hex'),
+          hashHex: this.headHex,
+          nickname: this.head.v.n,
+          avatar: this.head.v.a,
+          value: curr.v
+        })
 
-      if (res)
-      // now we get the next hash!
-      if (res && res.v.next) {
-        this.getTweet(res.v.next)
       }
 
-    })
-    */
+      if (this.props.timeline) { // also get stuff in localStorage.following
+        var followingLocal = localStorage.following
+        if (followingLocal) {
+          followingLocal = JSON.parse(followingLocal)
+
+          for(var i=0; i<followingLocal.length; i++) {
+            var fhash = followingLocal[i]
+            var followerFeed = localStorage[fhash]
+             if (followerFeed) {
+               var followerCurr = JSONB.parse(followerFeed) // follower head
+               var originalFollowerCurr = followerCurr
+               while (followerCurr.v.next) {
+                 var n = followerCurr.v.next.slice(0, 20)
+                 var nl = localStorage[n.toString('hex')]
+                 if (!nl) break;
+                 followerCurr = JSONB.parse(nl)
+                 if (followerCurr.v.t) {
+                   //arr.push(followerCurr.v.t.toString('utf-8') +' by '+ curr.v.f.toString('hex'))
+                   var t = {
+                     key: n.toString('hex'),
+                     hashHex: fhash,
+                     nickname: originalFollowerCurr.v.n,
+                     avatar: originalFollowerCurr.v.a,
+                     value: followerCurr.v
+                   }
+                   tweets.push(t)
+                 }
+               }
+             }
+          }
+
+        }
+      }
+
+    }
+
+    this.setState({tweets: tweets.sort(function (a, b) {
+      var aTweetMinutes = a.value.d.readUIntBE(0, a.value.d.length)
+      var bTweetMinutes = b.value.d.readUIntBE(0, b.value.d.length)
+
+      if(aTweetMinutes > bTweetMinutes) return -1;
+      if(aTweetMinutes < bTweetMinutes) return 1;
+      return 0;
+    })})
+
   }
   goToAddress(hashHex) {
     //console.log(hashHex)

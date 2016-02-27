@@ -104,6 +104,13 @@ export default class Tweet extends Component {
         // f is a hash
         f: new Buffer(followHash, 'hex')
       }
+
+      // also add to localStorage.following
+      if (!localStorage.following)
+        localStorage.following = JSON.stringify([])
+      var following = JSON.parse(localStorage.following)
+      following.push(followHash)
+      localStorage.following = JSON.stringify(following)
     }
 
     iopts.v.d = timestamp
