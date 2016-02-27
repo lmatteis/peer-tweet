@@ -5,6 +5,7 @@ import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
 import DhtSkipList from './DhtSkipList'
+import FastDhtPublish from './FastDhtPublish'
 
 export default class Settings extends Component {
   constructor(props) {
@@ -133,6 +134,10 @@ export default class Settings extends Component {
         <hr />
 
         <DhtSkipList />
+        <hr />
+
+        <FastDhtPublish />
+        <hr />
       </div>
     );
   }

@@ -4,7 +4,7 @@ var JSONB = require('json-buffer')
 import { DhtStore, dht, opts} from '../api/DhtStore'
 import Tweet from './Tweet'
 import SkipList from './SkipList'
-import DhtPublish from './DhtPublish'
+import FastDhtPublish from './FastDhtPublish'
 import DhtDownload from './DhtDownload'
 import DhtSkipList from './DhtSkipList'
 import Timeline from './Timeline'
@@ -79,7 +79,7 @@ export default class Main extends Component {
             onClick={() => this.setState({ page: 'settings'})}
             ></div>
           <div className="sidebar-item space"></div>
-          <DhtPublish every="1800000"/>
+          <FastDhtPublish every="1800000"/>
           <DhtDownload />
         </div>
         <div className="flexbox-content">
