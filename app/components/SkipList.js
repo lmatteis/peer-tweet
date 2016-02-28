@@ -67,15 +67,17 @@ export default class Main extends Component {
         for(var i=0; i<foll.length; i++) {
           var fhash = foll[i]
           var followingData = localStorage[fhash]
-          if (followingData) followingData = JSONB.parse(followingData)
+          if (followingData) {
+            followingData = JSONB.parse(followingData)
 
-          tweets.push({
-            key: fhash,
-            hashHex: fhash,
-            nickname: followingData.v.n,
-            avatar: followingData.v.a,
-            value: followingData.v
-          })
+            tweets.push({
+              key: fhash,
+              hashHex: fhash,
+              nickname: followingData.v.n,
+              avatar: followingData.v.a,
+              value: followingData.v
+            })
+          }
 
         }
       }
