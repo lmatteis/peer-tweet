@@ -11,9 +11,10 @@ export default class Main extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tweets: []
+      tweets: [],
+      max: 20
     }
-    this.pageLength = 3
+    this.pageLength = 20
 
     this.unsubscribe = tweetsStore.subscribe(() => {
       var s = tweetsStore.getState()
@@ -136,15 +137,7 @@ export default class Main extends Component {
       }
 
     }
-
-    this.setState({tweets: tweets.sort(function (a, b) {
-      var aTweetMinutes = a.value.d.readUIntBE(0, a.value.d.length)
-      var bTweetMinutes = b.value.d.readUIntBE(0, b.value.d.length)
-
-      if(aTweetMinutes > bTweetMinutes) return -1;
-      if(aTweetMinutes < bTweetMinutes) return 1;
-      return 0;
-    })})
+    this.setState({tweets: tweets })
 
   }
   goToAddress(hashHex) {
@@ -173,42 +166,64 @@ export default class Main extends Component {
   }
 
   render() {
+    var tweets = this.state.tweets.sort(function (a, b) {
+      var aTweetMinutes = a.value.d.readUIntBE(0, a.value.d.length)
+      var bTweetMinutes = b.value.d.readUIntBE(0, b.value.d.length)
+
+      if(aTweetMinutes > bTweetMinutes) return -1;
+      if(aTweetMinutes < bTweetMinutes) return 1;
+      return 0;
+    })
+
+    var tweetsHtml = []
+    var len = this.state.max
+    if (tweets.length < this.state.max)
+      len = tweets.length
+
+    for (var i=0; i<len; i++) {
+      var tweet = tweets[i]
+      var text = ''
+      var tweetMinutes = tweet.value.d.readUIntBE(0, tweet.value.d.length)
+      var d = new Date(0)
+      d.setUTCMinutes(tweetMinutes)
+      if (tweet.value.t) {
+        text = tweet.value.t.toString('utf8')
+      } else if (tweet.value.f) { // follow
+        text = <span>Following <a href="#" onClick={this.goToAddress.bind(this, tweet.value.f.toString('hex'))}>@{DhtStore.hashToBase58(tweet.value.f.toString('hex'))}</a></span>
+      }
+
+      var urlPattern = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/g
+
+      var url = text.toString().match(urlPattern)
+
+      if (url) {
+        var parts = text.split(url[0]);
+        text = []
+        text[0] = parts[0]
+        text[1] = <a href="#" onClick={() => shell.openExternal(url[0])}>{url[0]}</a>
+        text[2] = parts[1];
+      }
+
+
+      tweetsHtml.push(
+        <div className="tweet" key={tweet.key}>
+          {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
+          <div className="minutes-ago">{this.showTime(tweetMinutes)}</div>
+          <div>{text}</div>
+          { (url) ? <img className="media" src={url} /> : null}
+          <div className="avatar">
+            { tweet.avatar ? <img src={tweet.avatar.toString()} /> : <div className="default-avatar ion-person"></div> }
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div>
-        {this.state.tweets.map((tweet) => {
-          var text = ''
-          var tweetMinutes = tweet.value.d.readUIntBE(0, tweet.value.d.length)
-          var d = new Date(0)
-          d.setUTCMinutes(tweetMinutes)
-          if (tweet.value.t) {
-            text = tweet.value.t.toString('utf8')
-          } else if (tweet.value.f) { // follow
-            text = <span>Following <a href="#" onClick={this.goToAddress.bind(this, tweet.value.f.toString('hex'))}>@{DhtStore.hashToBase58(tweet.value.f.toString('hex'))}</a></span>
-          }
-
-          var urlPattern = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/g
-
-          var url = text.toString().match(urlPattern)
-
-          if (url) {
-            var parts = text.split(url[0]);
-            text = []
-            text[0] = parts[0]
-            text[1] = <a href="#" onClick={() => shell.openExternal(url[0])}>{url[0]}</a>
-            text[2] = parts[1];
-          }
-
-
-          return <div className="tweet" key={tweet.key}>
-            {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
-            <div className="minutes-ago">{this.showTime(tweetMinutes)}</div>
-            <div>{text}</div>
-            { (url) ? <img className="media" src={url} /> : null}
-            <div className="avatar">
-              { tweet.avatar ? <img src={tweet.avatar.toString()} /> : <div className="default-avatar ion-person"></div> }
-            </div>
-          </div>
-        })}
+        {tweetsHtml}
+        <a href="#" onClick={
+           () => this.setState((state) => ({ max: state.max + this.pageLength }))
+         }>Load more tweets</a>
       </div>
     );
   }
