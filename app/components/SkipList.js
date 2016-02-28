@@ -77,6 +77,13 @@ export default class Main extends Component {
               avatar: followingData.v.a,
               value: followingData.v
             })
+          } else { // still show something
+            tweets.push({
+              key: fhash,
+              hashHex: fhash,
+              value: { d: new Buffer(0)}
+            })
+
           }
 
         }
@@ -178,7 +185,7 @@ export default class Main extends Component {
       localStorage.following = JSON.stringify(following)
       currentPageStore.dispatch({
         type: 'SET_CURRENT_PAGE',
-        page: 'following'
+        page: 'timeline'
       })
     }
   }
