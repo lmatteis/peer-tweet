@@ -201,9 +201,7 @@ export default class Main extends Component {
 
           return <div className="tweet" key={tweet.key}>
             {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
-            <div className="minutes-ago">
-              {this.showTime(tweetMinutes)}
-            </div>
+            <div className="minutes-ago">{this.showTime(tweetMinutes)}</div>
             <div>{text}</div>
             { (url) ? <img className="media" src={url} /> : null}
             <div className="avatar">

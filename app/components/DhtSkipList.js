@@ -20,6 +20,7 @@ export default class DhtSkipList extends Component {
   }
 
   start(hash, headHex) {
+    hash = hash.toString('hex')
     if (this.gotHashes[hash])
       return console.log('we already got this hash', hash)
     if (this.gettingHashes[hash])
@@ -28,7 +29,7 @@ export default class DhtSkipList extends Component {
     if (Object.keys(this.gettingHashes).length >= 10)
       return console.log('we got 10 items!')
 
-    console.log('getting', hash.toString('hex'))
+    console.log('getting', hash)
     this.gettingHashes[hash] = true
     dht.get(hash, (err, res) => {
       // concurrently get all hashes in all .next fields :) and cache the hash in this.state
