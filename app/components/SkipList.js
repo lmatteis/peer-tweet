@@ -185,7 +185,7 @@ export default class Main extends Component {
       localStorage.following = JSON.stringify(following)
       currentPageStore.dispatch({
         type: 'SET_CURRENT_PAGE',
-        page: 'timeline'
+        page: 'following'
       })
     }
   }
@@ -250,9 +250,10 @@ export default class Main extends Component {
     return (
       <div>
         {tweetsHtml}
-        <a href="#" onClick={
-           () => this.setState((state) => ({ max: state.max + this.pageLength }))
-         }>Load more tweets</a>
+        {tweets.length < this.state.max ? null
+       : <a href="#" onClick={
+          () => this.setState((state) => ({ max: state.max + this.pageLength }))
+        }>Load more tweets</a> }
       </div>
     );
   }

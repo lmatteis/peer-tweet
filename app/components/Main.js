@@ -40,11 +40,11 @@ export default class Main extends Component {
   render() {
     var content;
     if (this.state.page == 'timeline')
-      content = <Timeline />
+      content = <Timeline key={Date.now()}/>
     else if (this.state.page == 'address')
       content = <Address hashHex={this.state.hashHex} />
     else if (this.state.page == 'following')
-      content = <Following />
+      content = <Following key={Date.now()}/>
     else if (this.state.page == 'settings')
       content = <Settings />
 
