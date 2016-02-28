@@ -70,7 +70,6 @@ export default class Main extends Component {
           var followingData = localStorage[fhash]
           if (followingData) {
             followingData = JSONB.parse(followingData)
-
             tweets.push({
               key: fhash,
               hashHex: fhash,
@@ -164,6 +163,25 @@ export default class Main extends Component {
     var monthsPassed = daysPassed / 30
     return Math.floor(monthsPassed) + 'month'
   }
+  unFollow(hashHex) {
+    var following = localStorage.following
+    if (following) {
+      following = JSON.parse(following)
+      for (var i=0; i<following.length; i++) {
+        var f = following[i]
+        if (f == hashHex) {
+          // remove it from localStorage
+          following.splice(i, 1)
+          break;
+        }
+      }
+      localStorage.following = JSON.stringify(following)
+      currentPageStore.dispatch({
+        type: 'SET_CURRENT_PAGE',
+        page: 'following'
+      })
+    }
+  }
 
   render() {
     var tweets = this.state.tweets.sort(function (a, b) {
@@ -190,6 +208,10 @@ export default class Main extends Component {
         text = tweet.value.t.toString('utf8')
       } else if (tweet.value.f) { // follow
         text = <span>Following <a href="#" onClick={this.goToAddress.bind(this, tweet.value.f.toString('hex'))}>@{DhtStore.hashToBase58(tweet.value.f.toString('hex'))}</a></span>
+      }
+
+      if (this.props.following) {
+        text = <a href="#" onClick={this.unFollow.bind(this, tweet.hashHex)}>Unfollow</a>
       }
 
       var urlPattern = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/g
