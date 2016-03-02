@@ -6,7 +6,7 @@ html, body {
 
 body > div {
   height: 100%;
-  overflow: scroll;
+  overflow: hidden;
   -webkit-overflow-scrolling: touch;
 }
 html {
@@ -72,6 +72,9 @@ body {
 .sidebar-item.down {
   font-size: 15px;
 }
+.sidebar-item.down span {
+  font-size: 10px;
+}
 .sidebar-item:hover {
   color: #D2D3D5;
 }
@@ -98,7 +101,7 @@ body {
 .top-bar .search {
   position: absolute;
   top:10px;
-  right:20px;
+  right:10px;
   font-size:25px;
   cursor: pointer;
 }
@@ -107,7 +110,7 @@ body {
   color: #3093FF;
 }
 .top-bar .search {
-  right: 50px;
+  right: 40px;
 }
 .tweet {
   margin-bottom:10px;

@@ -148,9 +148,9 @@ export default class Tweet extends Component {
 
     // now publish to DHT both head and immutable tweet
     dht.put(opts, (err, res) => { // published head
-      if (err) return console.error(res);
+      if (err) return console.error(err);
       dht.put(iopts, (err, res) => { // published tweet
-        if (err) return console.error(res);
+        if (err) return console.error(err);
       })
     })
     this.props.onTweetOrFollow()

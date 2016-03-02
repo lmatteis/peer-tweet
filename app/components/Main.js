@@ -79,8 +79,9 @@ export default class Main extends Component {
             onClick={() => this.setState({ page: 'settings'})}
             ></div>
           <div className="sidebar-item space"></div>
-          <FastDhtPublish every="1800000"/>
-          <DhtDownload />
+          
+          <FastDhtPublish every="1800000" />
+          <DhtDownload every="1800000" />
         </div>
         <div className="flexbox-content">
           {content}
