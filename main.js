@@ -46,9 +46,9 @@ app.on('ready', () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'PeerTweet',
       submenu: [{
-        label: 'About ElectronReact',
+        label: 'About PeerTweet',
         selector: 'orderFrontStandardAboutPanel:'
       }, {
         type: 'separator'
@@ -58,7 +58,7 @@ app.on('ready', () => {
       }, {
         type: 'separator'
       }, {
-        label: 'Hide ElectronReact',
+        label: 'Hide PeerTweet',
         accelerator: 'Command+H',
         selector: 'hide:'
       }, {
@@ -154,9 +154,9 @@ app.on('ready', () => {
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('http://electron.atom.io');
+          shell.openExternal('https://github.com/lmatteis/peer-tweet');
         }
-      }, {
+      }/*, {
         label: 'Documentation',
         click() {
           shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
@@ -171,7 +171,7 @@ app.on('ready', () => {
         click() {
           shell.openExternal('https://github.com/atom/electron/issues');
         }
-      }]
+      }*/]
     }];
 
     menu = Menu.buildFromTemplate(template);
@@ -221,9 +221,9 @@ app.on('ready', () => {
       submenu: [{
         label: 'Learn More',
         click() {
-          shell.openExternal('http://electron.atom.io');
+          shell.openExternal('https://github.com/lmatteis/peer-tweet');
         }
-      }, {
+      }/*, {
         label: 'Documentation',
         click() {
           shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
@@ -238,7 +238,7 @@ app.on('ready', () => {
         click() {
           shell.openExternal('https://github.com/atom/electron/issues');
         }
-      }]
+      }*/]
     }];
     menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);

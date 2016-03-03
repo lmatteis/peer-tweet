@@ -135,9 +135,6 @@ export default class Settings extends Component {
 
         <DhtSkipList />
         <hr />
-
-        <FastDhtPublish />
-        <hr />
       </div>
     );
   }
