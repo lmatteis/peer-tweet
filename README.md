@@ -4,10 +4,14 @@
 
 ## Screenshot
 
-![PeerTweet](http://i.imgur.com/Kow6cVH.png)
-![](http://i.imgur.com/afsdsXp.png)
+![PeerTweet](http://i.imgur.com/5vYZScZ.png)
 
-## Abstract
+## Download
+
+Download the binary from the releases page: https://github.com/lmatteis/peer-tweet/releases
+
+
+## What is PeerTweet?
 
 BitTorrent's DHT is probably one of the most resilient and censorship-resistant networks on the internet. PeerTweet uses this network to allow users to broadcast *tweets* to anyone who is listening. When you start PeerTweet, it generates a hash `@33cwte8iwWn7uhtj9MKCs4q5Ax7B` which is similar to your Twitter username (ex. `@lmatteis`). The difference is that you have entire control over what can be posted because only you own the private key associated with such address. Furthermore, thanks to the DHT, what you post cannot be stopped by any government or institution.
 
