@@ -28,7 +28,7 @@ if (process.argv.length >= 3 && process.env.NODE_ENV === 'development')
   app.setPath('userData', process.argv[2])
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({ width: 1024, height: 728 });
+  mainWindow = new BrowserWindow({ width: 450, height: 500 });
 
   if (process.env.HOT) {
     mainWindow.loadURL(`file://${__dirname}/app/hot-dev-app.html`);
