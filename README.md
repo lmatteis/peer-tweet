@@ -6,9 +6,10 @@
 
 ![PeerTweet](http://i.imgur.com/5vYZScZ.png)
 
-## Download
+## Quick links
 
-Download the binary from the releases page: https://github.com/lmatteis/peer-tweet/releases
+* Download the latest binaries from the [releases page](https://github.com/lmatteis/peer-tweet/releases).
+* Find and share PeerTweet addresses from the [addresses](https://github.com/lmatteis/peer-tweet/issues/9) issues page.
 
 
 ## What is PeerTweet?
@@ -18,8 +19,6 @@ BitTorrent's DHT is probably one of the most resilient and censorship-resistant 
 Once you find other PeerTweet addresses you trust (and are not spam), you can follow them. This configures your client to store this user's tweets and broadcasts them to the DHT every once in a while to keep their feed alive. This cooperation of following accounts, allows for feeds to stay alive in the DHT network. The PeerTweet protocol also publishes your actions such as `I just followed @919c..` or `I just liked @9139..` and `I just retweeted @5789..`. This allows the possibility for new users to find other addresses they can trust; if I trust the user `@6749..` and they're following `@9801..`, then perhaps I can mark `@9801..` as not spam. This idea of publicly tweeting about your actions also allows for powerful future crawling analysis of this social graph.
 
 <!-- In terms of storing tweets on the network, things are implemented similarly to this proposal: http://libtorrent.org/dht_rss.html - Each tweet is an immutable object which is `put()` on the network and contains an important `next` property which a list of exactly 3 hashes and allows for the implementation of a Skip list. These 3 hashes are the hashes of the item 1, 2 and 4 hops away. This allows for parallel `get()` requests when iterating over someones feed. The head is the only mutable object of the feed and contains information such as the user's name, a little description and an HTTP url to their avatar. -->
-
-**Alpha quality** you probably only want to use this if you like to send pull requests fixing things :)
 
 
 
