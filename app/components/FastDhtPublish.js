@@ -92,8 +92,6 @@ export default class FastDhtPublish extends Component {
 
 
   publish(e) {
-    if (this.state.stack > 0)
-      return console.log('currently publishing')
 
     // start from getting head
     var myHash = DhtStore.myHash()

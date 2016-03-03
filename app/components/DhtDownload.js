@@ -103,8 +103,6 @@ export default class DhtDownload extends Component {
   }
 
   download(e) {
-    if (this.state.stack > 0)
-      return console.log('currently downloading')
 
     // start from getting head
     var myHash = DhtStore.myHash()
