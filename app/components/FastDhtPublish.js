@@ -35,16 +35,18 @@ export default class FastDhtPublish extends Component {
     var setTimeRemaining = () => {
       var now = Date.now()
       var t = this.props.every - (Date.now() - this.state.timeOfLastRun)
+      if (t < 0) t = 0
       var seconds = Math.floor( (t/1000) % 60 );
       var minutes = Math.floor( (t/1000/60) % 60 );
 
       this.setState({ timeRemaining: this.state.timeOfLastRun ?
-        ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
+        minutes
+        //('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
         : null})
     }
 
     this.intervalID = setInterval(run, this.props.every || 1800000) // 30 minutes = 1800000 ms
-    this.updateTimeIntervalID = setInterval(setTimeRemaining, 1000) // every minute
+    this.updateTimeIntervalID = setInterval(setTimeRemaining, 60000) // every minute
     setTimeRemaining()
 
     // dht.on('ready', () => {
@@ -90,6 +92,9 @@ export default class FastDhtPublish extends Component {
 
 
   publish(e) {
+    if (this.state.stack > 0)
+      return console.log('currently publishing')
+
     // start from getting head
     var myHash = DhtStore.myHash()
     var myHead = localStorage[myHash]
@@ -144,8 +149,7 @@ export default class FastDhtPublish extends Component {
   render() {
     // this publishes to the DHT, starting from my hash in localStorage
     return (
-      <div className="sidebar-item ion-upload down" onClick={::this.publish} title={'Publish to the DHT, starting from my feed.'}>
-        <span>{this.state.stack} - {this.state.timeRemaining}</span>
+      <div className="sidebar-item ion-upload down" onClick={::this.publish} title={this.state.stack > 0 ? 'Currently publishing... ('+this.state.stack+')': 'Publish to the DHT, starting from my feed. Will publish next in '+this.state.timeRemaining+' min(s)'}>
       </div>
     );
   }

@@ -26,16 +26,18 @@ export default class DhtDownload extends Component {
     var setTimeRemaining = () => {
       var now = Date.now()
       var t = this.props.every - (Date.now() - this.state.timeOfLastRun)
+      if (t < 0) t = 0
       var seconds = Math.floor( (t/1000) % 60 );
       var minutes = Math.floor( (t/1000/60) % 60 );
 
       this.setState({ timeRemaining: this.state.timeOfLastRun ?
-        ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
+        minutes
+        //('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2)
         : null})
     }
 
     this.intervalID = setInterval(run, this.props.every || 1800000) // 30 minutes = 1800000 ms
-    this.updateTimeIntervalID = setInterval(setTimeRemaining, 1000) // every minute
+    this.updateTimeIntervalID = setInterval(setTimeRemaining, 60000) // every minute
     setTimeRemaining()
   }
 
@@ -101,6 +103,9 @@ export default class DhtDownload extends Component {
   }
 
   download(e) {
+    if (this.state.stack > 0)
+      return console.log('currently downloading')
+
     // start from getting head
     var myHash = DhtStore.myHash()
 
@@ -133,8 +138,7 @@ export default class DhtDownload extends Component {
     // downloads all the feeds i'm following
     // including my own feed - it doesn't dht.get() them if already in localStorage
     return (
-      <div className="sidebar-item ion-ios-cloud-download down" onClick={::this.download} title={"Start downlading all the feeds you're following to see if there are any changes"}>
-        <span>{this.state.stack} - {this.state.timeRemaining}</span>
+      <div className="sidebar-item ion-ios-cloud-download down" onClick={::this.download} title={this.state.stack > 0 ? 'Currently downloading... ('+this.state.stack+')' :"Start downlading all the feeds you're following to see if there are any changes. Will download next in " + this.state.timeRemaining +" min(s)"}>
       </div>
     );
   }

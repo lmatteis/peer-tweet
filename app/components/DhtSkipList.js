@@ -11,6 +11,7 @@ export default class DhtSkipList extends Component {
     super(props)
     this.state = {
       base58: '',
+      stack: 0
     }
     this.gotHashes = {}
     this.gettingHashes = {}
@@ -31,7 +32,13 @@ export default class DhtSkipList extends Component {
 
     console.log('getting', hash)
     this.gettingHashes[hash] = true
+    this.setState((state) => ({ stack: state.stack + 1 }))
     dht.get(hash, (err, res) => {
+      this.setState((state) => ({ stack: state.stack - 1 }))
+      if (Object.keys(this.gettingHashes).length == 1 && (err || !res)) {
+        this.setState({nothingFound: true})
+        return
+      }
       // concurrently get all hashes in all .next fields :) and cache the hash in this.state
       // hashes are in 20 bytes chunks in .next
       if (res) {
@@ -72,6 +79,7 @@ export default class DhtSkipList extends Component {
     this.gotHashes = {}
     this.gettingHashes = {}
     var headHex = DhtStore.base58toHash(this.state.base58)
+    this.setState({nothingFound:false})
     this.start(headHex, headHex)
     // start from getting head
     //var myHash = DhtStore.myHash()
@@ -86,8 +94,11 @@ export default class DhtSkipList extends Component {
   render() {
     return (
       <div>
-        <input type="text" onChange={::this.onBase58Change} />
-        <button onClick={::this.skip}>dht skiplist iterate</button>
+        <input type="text" onChange={::this.onBase58Change} placeholder="user address ex. 33cw..."/>
+        <button onClick={::this.skip}>{this.state.stack > 0 ? 'loading...' : 'find'}</button>
+        {this.state.nothingFound ?
+          <div>nothing found</div>
+        : null}
 
         { false &&
         <div>
