@@ -1,7 +1,7 @@
 {
   "name": "peer-tweet",
   "productName": "PeerTweet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Decentralized feeds using BitTorrent's DHT",
   "main": "main.js",
   "scripts": {
