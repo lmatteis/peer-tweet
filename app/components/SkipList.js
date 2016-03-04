@@ -228,8 +228,10 @@ export default class Main extends Component {
       if (url) {
         var parts = text.split(url[0]);
         text = []
-        text[0] = parts[0]
-        text[1] = <a href="#" onClick={() => shell.openExternal(url[0])}>{url[0]}</a>
+        text[0] = parts[0];
+        (function (text, url) {
+          text[1] = <a href="#" onClick={() => shell.openExternal(url[0]) }>{url[0]}</a>
+        })(text, url)
         text[2] = parts[1];
       }
 
@@ -239,7 +241,7 @@ export default class Main extends Component {
           {tweet.nickname ? <b>{tweet.nickname.toString()}</b> : null} <a href="#" className="address" onClick={this.goToAddress.bind(this, tweet.hashHex)}>@{DhtStore.hashToBase58(tweet.hashHex)}</a>
           <div className="minutes-ago">{this.showTime(tweetMinutes)}</div>
           <div>{text}</div>
-          { (url) ? <img className="media" src={url} /> : null}
+          {/* (url) ? <img className="media" src={url} /> : null*/}
           <div className="avatar">
             { tweet.avatar ? <img src={tweet.avatar.toString()} /> : <div className="default-avatar ion-person"></div> }
           </div>

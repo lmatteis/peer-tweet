@@ -27,7 +27,8 @@ export default class FastDhtPublish extends Component {
     var run = () => {
       if (this.state.stack > 0) {
         console.log('still publishing')
-        return;
+        // XXX we don't stop the timer if stack is stalled
+        //return;
       }
       this.setState({ timeOfLastRun: Date.now() })
       this.publish()

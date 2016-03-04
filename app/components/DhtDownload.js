@@ -18,7 +18,8 @@ export default class DhtDownload extends Component {
     var run = () => {
       if (this.state.stack > 0) {
         console.log('still downloading')
-        return;
+        // XXX we don't stop the timer if stack is stalled
+        //return;
       }
       this.setState({ timeOfLastRun: Date.now() })
       this.download()
