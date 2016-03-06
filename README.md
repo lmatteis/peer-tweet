@@ -91,7 +91,7 @@ Then run these commands to build it on Windows:
 ```
 npm install -g node-gyp
 cd ./node_modules/ed25519-supercop/
-HOME=~/.electron-gyp node-gyp rebuild --target=0.36.9--arch=x64 --dist-url=https://atom.io/download/atom-shell
+HOME=~/.electron-gyp node-gyp rebuild --target=0.36.9 --arch=x64 --dist-url=https://atom.io/download/atom-shell
 ```
 
 
