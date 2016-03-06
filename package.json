@@ -1,5 +1,5 @@
 {
-  "name": "peer-tweet",
+  "name": "PeerTweet",
   "productName": "PeerTweet",
   "version": "0.1.1",
   "description": "Decentralized feeds using BitTorrent's DHT",
