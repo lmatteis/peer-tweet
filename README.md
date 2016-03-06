@@ -84,6 +84,16 @@ npm install --save-dev electron-rebuild
 .\node_modules\.bin\electron-rebuild.cmd
 ```
 
+To get `ed25519-supercop` to work on Windows I also had to install `node-gyp` and all the Python2.7 and Visual Studio stuff which node-gyp requires: https://github.com/nodejs/node-gyp
+
+Then run these commands to build it on Windows:
+
+```
+npm install -g node-gyp
+cd ./node_modules/ed25519-supercop/
+HOME=~/.electron-gyp node-gyp rebuild --target=0.36.9--arch=x64 --dist-url=https://atom.io/download/atom-shell
+```
+
 
 ## Run
 
